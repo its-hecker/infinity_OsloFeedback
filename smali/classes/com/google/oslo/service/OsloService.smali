@@ -97,9 +97,9 @@
     .locals 2
 
     .line 145
-    const-string v0, "com.google.restricted_assist_gesture.permission.RESTRICTED_ASSIST_GESTURE_PROVIDER"
+    const-string v0, "android.permission.STATUS_BAR_SERVICE"
 
-    const-string v1, "Must have com.google.restricted_assist_gesture.permission.RESTRICTED_ASSIST_GESTURE_PROVIDER permission"
+    const-string v1, "Must have android.permission.STATUS_BAR_SERVICE permission"
 
     invoke-virtual {p0, v0, v1}, Lcom/google/oslo/service/OsloService;->enforceCallingOrSelfPermission(Ljava/lang/String;Ljava/lang/String;)V
 
