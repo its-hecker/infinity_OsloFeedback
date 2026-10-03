@@ -490,23 +490,19 @@
     .locals 1
     .param p1, "appPackageName"    # Ljava/lang/String;
 
-    .line 77
+    # Accept any app with a media session instead of only Google's
+    # media_app_whitelist. Each action still checks that the session
+    # supports what it does (isSupportedAppUseCase).
     invoke-static {p1}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
 
     move-result v0
 
     if-nez v0, :cond_0
 
-    .line 78
-    sget-object v0, Lcom/google/oslo/service/actions/MediaPlayerAction;->sMediaAppWhitelist:Ljava/util/Set;
-
-    invoke-interface {v0, p1}, Ljava/util/Set;->contains(Ljava/lang/Object;)Z
-
-    move-result v0
+    const/4 v0, 0x1
 
     return v0
 
-    .line 80
     :cond_0
     const/4 v0, 0x0
 

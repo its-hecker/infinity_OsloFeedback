@@ -316,74 +316,28 @@
 .end method
 
 .method protected isSupportedAppUseCase(Ljava/lang/String;J)Z
-    .locals 3
+    .locals 1
     .param p1, "appPackageName"    # Ljava/lang/String;
     .param p2, "actions"    # J
 
-    .line 91
+    # Stock only checked skip support for iHeartRadio, because every other
+    # whitelisted app supports it. With any app allowed, check it for all.
     invoke-static {p1}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
 
     move-result v0
 
-    if-nez v0, :cond_1
+    if-nez v0, :cond_0
 
-    .line 92
-    const/4 v0, -0x1
-
-    invoke-virtual {p1}, Ljava/lang/String;->hashCode()I
-
-    move-result v1
-
-    const/4 v2, 0x0
-
-    packed-switch v1, :pswitch_data_0
-
-    :cond_0
-    goto :goto_0
-
-    :pswitch_0
-    const-string v1, "com.clearchannel.iheartradio.controller"
-
-    invoke-virtual {p1, v1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
-
-    move-result v1
-
-    if-eqz v1, :cond_0
-
-    move v0, v2
-
-    :goto_0
-    packed-switch v0, :pswitch_data_1
-
-    goto :goto_1
-
-    .line 94
-    :pswitch_1
     invoke-direct {p0, p2, p3}, Lcom/google/oslo/service/actions/SkipMediaTrack;->isSkipNextPrevSupported(J)Z
 
     move-result v0
 
-    if-nez v0, :cond_1
+    return v0
 
-    .line 95
-    return v2
-
-    .line 99
-    :cond_1
-    :goto_1
+    :cond_0
     const/4 v0, 0x1
 
     return v0
-
-    :pswitch_data_0
-    .packed-switch 0x4e7b23d7
-        :pswitch_0
-    .end packed-switch
-
-    :pswitch_data_1
-    .packed-switch 0x0
-        :pswitch_1
-    .end packed-switch
 .end method
 
 .method protected onTrigger(Landroid/os/Bundle;)V
