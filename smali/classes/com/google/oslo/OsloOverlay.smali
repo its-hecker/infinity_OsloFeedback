@@ -634,7 +634,9 @@
     :try_start_0
     const-class v0, Lcom/android/systemui/plugins/DarkIconDispatcher;
 
-    invoke-static {p0, v0}, Lcom/android/systemui/plugins/PluginDependency;->get(Lcom/android/systemui/plugins/Plugin;Ljava/lang/Class;)Ljava/lang/Object;
+    sget-object v3, Lcom/android/systemui/plugins/PluginDependency;->INSTANCE:Lcom/android/systemui/plugins/PluginDependency;
+
+    invoke-virtual {v3, p0, v0}, Lcom/android/systemui/plugins/PluginDependency;->get(Lcom/android/systemui/plugins/Plugin;Ljava/lang/Class;)Ljava/lang/Object;
 
     move-result-object v0
 
@@ -645,7 +647,9 @@
     .line 854
     const-class v0, Lcom/android/systemui/plugins/statusbar/StatusBarStateController;
 
-    invoke-static {p0, v0}, Lcom/android/systemui/plugins/PluginDependency;->get(Lcom/android/systemui/plugins/Plugin;Ljava/lang/Class;)Ljava/lang/Object;
+    sget-object v3, Lcom/android/systemui/plugins/PluginDependency;->INSTANCE:Lcom/android/systemui/plugins/PluginDependency;
+
+    invoke-virtual {v3, p0, v0}, Lcom/android/systemui/plugins/PluginDependency;->get(Lcom/android/systemui/plugins/Plugin;Ljava/lang/Class;)Ljava/lang/Object;
 
     move-result-object v0
 
