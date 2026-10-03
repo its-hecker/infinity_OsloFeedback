@@ -196,12 +196,13 @@ adb shell settings put secure doze_wake_screen_gesture 1
 
 ## OsloFeedback extras
 
-On top of the four fixes, [infinity_OsloFeedback](https://github.com/its-hecker/infinity_OsloFeedback) (cnb) adds three optional features. Each one reads a `Settings.Secure` key, so it can be switched from the Motion Sense page (Step 6) or from `adb`:
+On top of the four fixes, [infinity_OsloFeedback](https://github.com/its-hecker/infinity_OsloFeedback) (cnb) adds four optional features. Each one reads a `Settings.Secure` key, so it can be switched from the Motion Sense page (Step 6) or from `adb`:
 
 | Key | Default | What it does |
 | --- | --- | --- |
 | `aware_any_media_app` | `1` | Skip and play/pause work in any media app that supports them. `0` limits them to Google's list of about 23 apps |
 | `aware_ignore_videos` | `1` | Gestures never skip or pause a video from an app outside Google's list (YouTube, or any session that reports movie content). `0` turns this off |
+| `aware_media_apps` | unset | Comma-separated list of media apps, edited on the Media apps page. With `aware_any_media_app` off, only these apps are controlled; with it on, these apps' videos are not ignored. Unset means Google's list |
 | `aware_glow_custom` | `1` | Tints the feedback glow. `0` keeps the stock blue |
 | `aware_glow_hue` | `270` | Glow hue in degrees: 0 red, 30 orange, 140 green, 190 cyan, 270 violet, 320 pink |
 

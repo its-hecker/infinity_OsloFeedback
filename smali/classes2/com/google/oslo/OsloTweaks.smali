@@ -8,6 +8,8 @@
 #   aware_ignore_videos  1 = do not skip or pause videos from other apps
 #   aware_glow_custom    1 = tint the glow, 0 = stock blue
 #   aware_glow_hue       hue of the glow in degrees, 0-359 (default 270, violet)
+#   aware_media_apps     comma-separated packages on the media app list; when
+#                        unset, Google's media_app_whitelist is used
 
 
 # direct methods
@@ -50,6 +52,114 @@
     move-exception v0
 
     return p1
+.end method
+
+.method private static getString(Ljava/lang/String;)Ljava/lang/String;
+    .locals 2
+    .param p0, "key"    # Ljava/lang/String;
+
+    :try_start_0
+    invoke-static {}, Landroid/app/ActivityThread;->currentApplication()Landroid/app/Application;
+
+    move-result-object v0
+
+    if-nez v0, :have_app
+
+    const/4 v1, 0x0
+
+    return-object v1
+
+    :have_app
+    invoke-virtual {v0}, Landroid/app/Application;->getContentResolver()Landroid/content/ContentResolver;
+
+    move-result-object v0
+
+    invoke-static {v0, p0}, Landroid/provider/Settings$Secure;->getString(Landroid/content/ContentResolver;Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v1
+    :try_end_0
+    .catchall {:try_start_0 .. :try_end_0} :catch_0
+
+    return-object v1
+
+    :catch_0
+    move-exception v0
+
+    const/4 v1, 0x0
+
+    return-object v1
+.end method
+
+# True if pkg is on the media app list: aware_media_apps when it is set
+# (written by the Motion Sense page), otherwise Google's whitelist.
+.method public static isListedMediaApp(Ljava/lang/String;Ljava/util/Set;)Z
+    .locals 3
+    .param p0, "pkg"    # Ljava/lang/String;
+    .param p1, "fallback"    # Ljava/util/Set;
+
+    const/4 v2, 0x0
+
+    if-nez p0, :have_pkg
+
+    return v2
+
+    :have_pkg
+    const-string v0, "aware_media_apps"
+
+    invoke-static {v0}, Lcom/google/oslo/OsloTweaks;->getString(Ljava/lang/String;)Ljava/lang/String;
+
+    move-result-object v0
+
+    if-nez v0, :custom_list
+
+    if-nez p1, :use_fallback
+
+    return v2
+
+    :use_fallback
+    invoke-interface {p1, p0}, Ljava/util/Set;->contains(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    return v0
+
+    # ("," + list + ",").contains("," + pkg + ",")
+    :custom_list
+    new-instance v1, Ljava/lang/StringBuilder;
+
+    invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V
+
+    const-string v2, ","
+
+    invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v1}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object v0
+
+    new-instance v1, Ljava/lang/StringBuilder;
+
+    invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V
+
+    invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v1, p0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+
+    invoke-virtual {v1}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
+
+    move-result-object v1
+
+    invoke-virtual {v0, v1}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
+
+    move-result v0
+
+    return v0
 .end method
 
 .method public static isAnyMediaAppEnabled()Z
