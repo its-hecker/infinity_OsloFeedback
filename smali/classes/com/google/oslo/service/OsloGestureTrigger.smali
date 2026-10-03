@@ -51,7 +51,7 @@
 
 .field private final mContextHubManager:Landroid/hardware/location/ContextHubManager;
 
-.field private final mGestureTriggerDetector:Landroid/media/soundtrigger/SoundTriggerDetector;
+.field private mGestureTriggerDetector:Landroid/media/soundtrigger/SoundTriggerDetector;
 
 .field private final mGestureTriggerManager:Landroid/media/soundtrigger/SoundTriggerManager;
 
@@ -415,6 +415,21 @@
     iget-object v2, p0, Lcom/google/oslo/service/OsloGestureTrigger;->mModel:Landroid/media/soundtrigger/SoundTriggerManager$Model;
 
     invoke-virtual {v1, v2}, Landroid/media/soundtrigger/SoundTriggerManager;->updateModel(Landroid/media/soundtrigger/SoundTriggerManager$Model;)V
+
+    # Android 14+ SoundTriggerDetector snapshots the model when it is created,
+    # and unloadGesturePlugin() deletes it, so recreate the detector after
+    # every updateModel() or startRecognition() gets a null model.
+    new-instance v1, Lcom/google/oslo/service/OsloGestureTrigger$DetectorCallback;
+
+    const/4 v2, 0x0
+
+    invoke-direct {v1, p0, v2}, Lcom/google/oslo/service/OsloGestureTrigger$DetectorCallback;-><init>(Lcom/google/oslo/service/OsloGestureTrigger;Lcom/google/oslo/service/OsloGestureTrigger$1;)V
+
+    invoke-direct {p0, v1}, Lcom/google/oslo/service/OsloGestureTrigger;->createSoundTriggerDetector(Landroid/media/soundtrigger/SoundTriggerDetector$Callback;)Landroid/media/soundtrigger/SoundTriggerDetector;
+
+    move-result-object v1
+
+    iput-object v1, p0, Lcom/google/oslo/service/OsloGestureTrigger;->mGestureTriggerDetector:Landroid/media/soundtrigger/SoundTriggerDetector;
 
     .line 133
     const-string v1, "Starting recognition"
