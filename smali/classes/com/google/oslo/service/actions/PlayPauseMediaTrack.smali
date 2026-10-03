@@ -1418,6 +1418,16 @@
 
     .line 193
     :cond_2
+
+    # Skip video sessions from apps outside the stock whitelist
+    iget-object v5, v2, Lcom/google/oslo/service/actions/MediaPlayerAction$OsloMediaController;->mMediaController:Landroid/media/session/MediaController;
+
+    invoke-virtual {p0, v5}, Lcom/google/oslo/service/actions/MediaPlayerAction;->isVideoFromUnlistedApp(Landroid/media/session/MediaController;)Z
+
+    move-result v5
+
+    if-nez v5, :goto_0
+
     sget-boolean v5, Lcom/google/oslo/service/actions/PlayPauseMediaTrack;->DEBUG:Z
 
     if-eqz v5, :cond_3

@@ -486,6 +486,68 @@
     return v0
 .end method
 
+.method protected isVideoFromUnlistedApp(Landroid/media/session/MediaController;)Z
+    .locals 3
+    .param p1, "controller"    # Landroid/media/session/MediaController;
+
+    # Apps on Google's media_app_whitelist keep their stock behaviour.
+    # For any other app, ignore sessions that play video, so a hand passing
+    # over the phone does not skip or pause a video.
+    invoke-virtual {p1}, Landroid/media/session/MediaController;->getPackageName()Ljava/lang/String;
+
+    move-result-object v0
+
+    sget-object v1, Lcom/google/oslo/service/actions/MediaPlayerAction;->sMediaAppWhitelist:Ljava/util/Set;
+
+    if-eqz v1, :check_type
+
+    invoke-interface {v1, v0}, Ljava/util/Set;->contains(Ljava/lang/Object;)Z
+
+    move-result v1
+
+    if-nez v1, :not_video
+
+    :check_type
+    const-string v1, "com.google.android.youtube"
+
+    invoke-virtual {v1, v0}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
+
+    move-result v1
+
+    if-nez v1, :is_video
+
+    invoke-virtual {p1}, Landroid/media/session/MediaController;->getPlaybackInfo()Landroid/media/session/MediaController$PlaybackInfo;
+
+    move-result-object v1
+
+    if-eqz v1, :not_video
+
+    invoke-virtual {v1}, Landroid/media/session/MediaController$PlaybackInfo;->getAudioAttributes()Landroid/media/AudioAttributes;
+
+    move-result-object v1
+
+    if-eqz v1, :not_video
+
+    invoke-virtual {v1}, Landroid/media/AudioAttributes;->getContentType()I
+
+    move-result v1
+
+    # AudioAttributes.CONTENT_TYPE_MOVIE
+    const/4 v2, 0x3
+
+    if-eq v1, v2, :is_video
+
+    :not_video
+    const/4 v0, 0x0
+
+    return v0
+
+    :is_video
+    const/4 v0, 0x1
+
+    return v0
+.end method
+
 .method protected isSupportedApp(Ljava/lang/String;)Z
     .locals 1
     .param p1, "appPackageName"    # Ljava/lang/String;
@@ -732,6 +794,16 @@
 
     .line 102
     :cond_2
+
+    # Skip video sessions from apps outside the stock whitelist
+    iget-object v4, v2, Lcom/google/oslo/service/actions/MediaPlayerAction$OsloMediaController;->mMediaController:Landroid/media/session/MediaController;
+
+    invoke-virtual {p0, v4}, Lcom/google/oslo/service/actions/MediaPlayerAction;->isVideoFromUnlistedApp(Landroid/media/session/MediaController;)Z
+
+    move-result v4
+
+    if-nez v4, :goto_0
+
     sget-boolean v4, Lcom/google/oslo/service/actions/MediaPlayerAction;->DEBUG:Z
 
     if-eqz v4, :cond_3
