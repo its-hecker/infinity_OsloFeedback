@@ -493,6 +493,12 @@
     # Apps on Google's media_app_whitelist keep their stock behaviour.
     # For any other app, ignore sessions that play video, so a hand passing
     # over the phone does not skip or pause a video.
+    invoke-static {}, Lcom/google/oslo/OsloTweaks;->isIgnoreVideosEnabled()Z
+
+    move-result v0
+
+    if-eqz v0, :not_video
+
     invoke-virtual {p1}, Landroid/media/session/MediaController;->getPackageName()Ljava/lang/String;
 
     move-result-object v0
@@ -561,6 +567,24 @@
 
     if-nez v0, :cond_0
 
+    invoke-static {}, Lcom/google/oslo/OsloTweaks;->isAnyMediaAppEnabled()Z
+
+    move-result v0
+
+    if-nez v0, :any_app
+
+    # Setting is off: stock behaviour, Google's media_app_whitelist only
+    sget-object v0, Lcom/google/oslo/service/actions/MediaPlayerAction;->sMediaAppWhitelist:Ljava/util/Set;
+
+    if-eqz v0, :cond_0
+
+    invoke-interface {v0, p1}, Ljava/util/Set;->contains(Ljava/lang/Object;)Z
+
+    move-result v0
+
+    return v0
+
+    :any_app
     const/4 v0, 0x1
 
     return v0

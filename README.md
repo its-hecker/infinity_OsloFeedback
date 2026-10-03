@@ -192,6 +192,23 @@ adb shell settings put secure doze_wake_display_gesture 1
 adb shell settings put secure doze_wake_lock_screen_gesture 1
 ```
 
+## Extras in this fork
+
+On top of the four fixes, this branch adds three optional features. Each one reads a `Settings.Secure` key, so it can be switched from Settings or from `adb`:
+
+| Key | Default | What it does |
+| --- | --- | --- |
+| `aware_any_media_app` | `1` | Skip and play/pause work in any media app that supports them. `0` limits them to Google's list of about 23 apps |
+| `aware_ignore_videos` | `1` | Gestures never skip or pause a video from an app outside Google's list (YouTube, or any session that reports movie content). `0` turns this off |
+| `aware_glow_custom` | `1` | Tints the feedback glow. `0` keeps the stock blue |
+| `aware_glow_hue` | `270` | Glow hue in degrees: 0 red, 30 orange, 140 green, 190 cyan, 270 violet, 320 pink |
+
+```
+adb shell settings put secure aware_glow_hue 320
+```
+
+A new glow color shows the next time the glow appears after hiding, for example after turning the screen off and on. The code is in `smali/classes2/com/google/oslo/OsloTweaks.smali`. The glow colors in `colors.xml` stay stock, and `OsloTweaks.tintGlow()` rotates their hue at runtime.
+
 ## Testing
 
 Capture logs within a minute or two of boot, before the buffer drops Oslo's startup lines. On Windows use `findstr` instead of `grep`, or save the whole log and search it later.

@@ -166,6 +166,10 @@
 
     move-result v2
 
+    invoke-static {v2}, Lcom/google/oslo/OsloTweaks;->tintGlow(I)I
+
+    move-result v2
+
     invoke-static {v2}, Landroid/graphics/Color;->valueOf(I)Landroid/graphics/Color;
 
     move-result-object v2
@@ -181,6 +185,10 @@
 
     move-result v2
 
+    invoke-static {v2}, Lcom/google/oslo/OsloTweaks;->tintGlow(I)I
+
+    move-result v2
+
     invoke-static {v2}, Landroid/graphics/Color;->valueOf(I)Landroid/graphics/Color;
 
     move-result-object v2
@@ -193,6 +201,10 @@
     const v2, 0x7f05001b    # @color/glow_light_color_3 '#00232e3f'
 
     invoke-virtual {p2, v2, v3}, Landroid/content/res/Resources;->getColor(ILandroid/content/res/Resources$Theme;)I
+
+    move-result v2
+
+    invoke-static {v2}, Lcom/google/oslo/OsloTweaks;->tintGlow(I)I
 
     move-result v2
 
@@ -216,6 +228,10 @@
 
     move-result v2
 
+    invoke-static {v2}, Lcom/google/oslo/OsloTweaks;->tintGlow(I)I
+
+    move-result v2
+
     invoke-static {v2}, Landroid/graphics/Color;->valueOf(I)Landroid/graphics/Color;
 
     move-result-object v2
@@ -229,6 +245,10 @@
 
     move-result v2
 
+    invoke-static {v2}, Lcom/google/oslo/OsloTweaks;->tintGlow(I)I
+
+    move-result v2
+
     invoke-static {v2}, Landroid/graphics/Color;->valueOf(I)Landroid/graphics/Color;
 
     move-result-object v2
@@ -239,6 +259,10 @@
     const v2, 0x7f050013    # @color/glow_dark_color_3 '#00081a33'
 
     invoke-virtual {p2, v2, v3}, Landroid/content/res/Resources;->getColor(ILandroid/content/res/Resources$Theme;)I
+
+    move-result v2
+
+    invoke-static {v2}, Lcom/google/oslo/OsloTweaks;->tintGlow(I)I
 
     move-result v2
 
@@ -260,6 +284,10 @@
 
     move-result v2
 
+    invoke-static {v2}, Lcom/google/oslo/OsloTweaks;->tintGlow(I)I
+
+    move-result v2
+
     invoke-static {v2}, Landroid/graphics/Color;->valueOf(I)Landroid/graphics/Color;
 
     move-result-object v2
@@ -273,6 +301,10 @@
 
     move-result v2
 
+    invoke-static {v2}, Lcom/google/oslo/OsloTweaks;->tintGlow(I)I
+
+    move-result v2
+
     invoke-static {v2}, Landroid/graphics/Color;->valueOf(I)Landroid/graphics/Color;
 
     move-result-object v2
@@ -283,6 +315,10 @@
     const v2, 0x7f050018    # @color/glow_light_asleep_color_3 '#00000000'
 
     invoke-virtual {p2, v2, v3}, Landroid/content/res/Resources;->getColor(ILandroid/content/res/Resources$Theme;)I
+
+    move-result v2
+
+    invoke-static {v2}, Lcom/google/oslo/OsloTweaks;->tintGlow(I)I
 
     move-result v2
 
@@ -304,6 +340,10 @@
 
     move-result v1
 
+    invoke-static {v1}, Lcom/google/oslo/OsloTweaks;->tintGlow(I)I
+
+    move-result v1
+
     invoke-static {v1}, Landroid/graphics/Color;->valueOf(I)Landroid/graphics/Color;
 
     move-result-object v1
@@ -317,6 +357,10 @@
 
     move-result v1
 
+    invoke-static {v1}, Lcom/google/oslo/OsloTweaks;->tintGlow(I)I
+
+    move-result v1
+
     invoke-static {v1}, Landroid/graphics/Color;->valueOf(I)Landroid/graphics/Color;
 
     move-result-object v1
@@ -327,6 +371,10 @@
     const v1, 0x7f050010    # @color/glow_dark_asleep_color_3 '#00000000'
 
     invoke-virtual {p2, v1, v3}, Landroid/content/res/Resources;->getColor(ILandroid/content/res/Resources$Theme;)I
+
+    move-result v1
+
+    invoke-static {v1}, Lcom/google/oslo/OsloTweaks;->tintGlow(I)I
 
     move-result v1
 
@@ -349,6 +397,10 @@
     move-result v0
 
     .line 120
+    invoke-static {v0}, Lcom/google/oslo/OsloTweaks;->tintGlow(I)I
+
+    move-result v0
+
     invoke-static {v0}, Landroid/graphics/Color;->valueOf(I)Landroid/graphics/Color;
 
     move-result-object v0
@@ -359,6 +411,10 @@
     const v0, 0x7f050015    # @color/glow_dark_line_color '#006eff'
 
     invoke-virtual {p2, v0, v3}, Landroid/content/res/Resources;->getColor(ILandroid/content/res/Resources$Theme;)I
+
+    move-result v0
+
+    invoke-static {v0}, Lcom/google/oslo/OsloTweaks;->tintGlow(I)I
 
     move-result v0
 
