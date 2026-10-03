@@ -71,7 +71,7 @@
     invoke-virtual {p0}, Lcom/google/oslo/OsloOverlay$Minimizer;->removeInteractionListeners()V
 
     .line 998
-    invoke-static {}, Landroid/hardware/input/InputManager;->getInstance()Landroid/hardware/input/InputManager;
+    invoke-static {}, Landroid/hardware/input/InputManagerGlobal;->getInstance()Landroid/hardware/input/InputManagerGlobal;
 
     move-result-object v0
 
@@ -79,7 +79,7 @@
 
     const-string v2, "oslo-minimizer"
 
-    invoke-virtual {v0, v2, v1}, Landroid/hardware/input/InputManager;->monitorGestureInput(Ljava/lang/String;I)Landroid/view/InputMonitor;
+    invoke-virtual {v0, v2, v1}, Landroid/hardware/input/InputManagerGlobal;->monitorGestureInput(Ljava/lang/String;I)Landroid/view/InputMonitor;
 
     move-result-object v0
 
