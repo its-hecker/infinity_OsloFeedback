@@ -12,6 +12,12 @@
 #                        unset, Google's media_app_whitelist is used
 
 
+# static fields
+.field private static sGlowObserverRegistered:Z
+
+.field private static sGlows:Ljava/util/ArrayList;
+
+
 # direct methods
 .method private constructor <init>()V
     .locals 0
@@ -280,4 +286,143 @@
     move-result v0
 
     return v0
+.end method
+
+# Keeps a weak reference to each ShaderGlow, and registers one observer for
+# the glow settings, so a new glow color shows without restarting SystemUI.
+# Called on the main thread from the ShaderGlow constructor.
+.method public static registerGlow(Ljava/lang/Object;)V
+    .locals 4
+    .param p0, "glow"    # Ljava/lang/Object;
+
+    sget-object v0, Lcom/google/oslo/OsloTweaks;->sGlows:Ljava/util/ArrayList;
+
+    if-nez v0, :have_list
+
+    new-instance v0, Ljava/util/ArrayList;
+
+    invoke-direct {v0}, Ljava/util/ArrayList;-><init>()V
+
+    sput-object v0, Lcom/google/oslo/OsloTweaks;->sGlows:Ljava/util/ArrayList;
+
+    :have_list
+    new-instance v1, Ljava/lang/ref/WeakReference;
+
+    invoke-direct {v1, p0}, Ljava/lang/ref/WeakReference;-><init>(Ljava/lang/Object;)V
+
+    invoke-virtual {v0, v1}, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
+
+    sget-boolean v0, Lcom/google/oslo/OsloTweaks;->sGlowObserverRegistered:Z
+
+    if-nez v0, :done
+
+    :try_start_0
+    invoke-static {}, Landroid/app/ActivityThread;->currentApplication()Landroid/app/Application;
+
+    move-result-object v0
+
+    if-eqz v0, :done
+
+    invoke-virtual {v0}, Landroid/app/Application;->getContentResolver()Landroid/content/ContentResolver;
+
+    move-result-object v0
+
+    new-instance v1, Lcom/google/oslo/OsloTweaks$GlowObserver;
+
+    new-instance v2, Landroid/os/Handler;
+
+    invoke-static {}, Landroid/os/Looper;->getMainLooper()Landroid/os/Looper;
+
+    move-result-object v3
+
+    invoke-direct {v2, v3}, Landroid/os/Handler;-><init>(Landroid/os/Looper;)V
+
+    invoke-direct {v1, v2}, Lcom/google/oslo/OsloTweaks$GlowObserver;-><init>(Landroid/os/Handler;)V
+
+    const/4 v3, 0x0
+
+    const-string v2, "aware_glow_custom"
+
+    invoke-static {v2}, Landroid/provider/Settings$Secure;->getUriFor(Ljava/lang/String;)Landroid/net/Uri;
+
+    move-result-object v2
+
+    invoke-virtual {v0, v2, v3, v1}, Landroid/content/ContentResolver;->registerContentObserver(Landroid/net/Uri;ZLandroid/database/ContentObserver;)V
+
+    const-string v2, "aware_glow_hue"
+
+    invoke-static {v2}, Landroid/provider/Settings$Secure;->getUriFor(Ljava/lang/String;)Landroid/net/Uri;
+
+    move-result-object v2
+
+    invoke-virtual {v0, v2, v3, v1}, Landroid/content/ContentResolver;->registerContentObserver(Landroid/net/Uri;ZLandroid/database/ContentObserver;)V
+
+    const/4 v0, 0x1
+
+    sput-boolean v0, Lcom/google/oslo/OsloTweaks;->sGlowObserverRegistered:Z
+    :try_end_0
+    .catchall {:try_start_0 .. :try_end_0} :catch_0
+
+    :done
+    return-void
+
+    :catch_0
+    move-exception v0
+
+    return-void
+.end method
+
+# Recolors every live ShaderGlow and drops the ones that are gone.
+.method static notifyGlowChanged()V
+    .locals 4
+
+    sget-object v0, Lcom/google/oslo/OsloTweaks;->sGlows:Ljava/util/ArrayList;
+
+    if-nez v0, :have_list
+
+    return-void
+
+    :have_list
+    invoke-virtual {v0}, Ljava/util/ArrayList;->size()I
+
+    move-result v1
+
+    :loop
+    add-int/lit8 v1, v1, -0x1
+
+    if-ltz v1, :done
+
+    invoke-virtual {v0, v1}, Ljava/util/ArrayList;->get(I)Ljava/lang/Object;
+
+    move-result-object v2
+
+    check-cast v2, Ljava/lang/ref/WeakReference;
+
+    invoke-virtual {v2}, Ljava/lang/ref/WeakReference;->get()Ljava/lang/Object;
+
+    move-result-object v2
+
+    if-nez v2, :alive
+
+    invoke-virtual {v0, v1}, Ljava/util/ArrayList;->remove(I)Ljava/lang/Object;
+
+    goto :loop
+
+    :alive
+    :try_start_0
+    check-cast v2, Lcom/google/oslo/ui/glow/ShaderGlow;
+
+    invoke-virtual {v2}, Lcom/google/oslo/ui/glow/ShaderGlow;->onGlowColorChanged()V
+    :try_end_0
+    .catchall {:try_start_0 .. :try_end_0} :catch_0
+
+    goto :loop
+
+    :catch_0
+    move-exception v3
+
+    goto :loop
+
+    :done
+    return-void
 .end method

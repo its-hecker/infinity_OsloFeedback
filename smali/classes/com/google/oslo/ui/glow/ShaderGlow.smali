@@ -305,6 +305,9 @@
     .line 117
     invoke-direct {p0}, Lcom/google/oslo/ui/glow/ShaderGlow;->updateDefaultValues()V
 
+    # Recolor live when the glow color setting changes
+    invoke-static {p0}, Lcom/google/oslo/OsloTweaks;->registerGlow(Ljava/lang/Object;)V
+
     .line 118
     return-void
 .end method
@@ -1961,4 +1964,29 @@
     const/4 v1, 0x1
 
     return v1
+.end method
+
+# Called by OsloTweaks on the main thread when aware_glow_custom or
+# aware_glow_hue changes.
+.method public onGlowColorChanged()V
+    .locals 2
+
+    iget-object v0, p0, Lcom/google/oslo/ui/glow/ShaderGlow;->mAnimator:Lcom/google/oslo/ui/glow/animations/AnimationController;
+
+    if-eqz v0, :done
+
+    iget-object v1, p0, Lcom/google/oslo/ui/glow/ShaderGlow;->mPluginContext:Landroid/content/Context;
+
+    if-eqz v1, :done
+
+    invoke-virtual {v1}, Landroid/content/Context;->getResources()Landroid/content/res/Resources;
+
+    move-result-object v1
+
+    invoke-virtual {v0, v1}, Lcom/google/oslo/ui/glow/animations/AnimationController;->reloadGlowColors(Landroid/content/res/Resources;)V
+
+    invoke-direct {p0}, Lcom/google/oslo/ui/glow/ShaderGlow;->setAnimationValues()V
+
+    :done
+    return-void
 .end method

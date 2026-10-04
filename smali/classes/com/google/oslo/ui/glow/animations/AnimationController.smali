@@ -52,9 +52,9 @@
 
 .field private final mDefaultGlowPosEngagedTapPartial:Lcom/google/oslo/ui/glow/animations/AnimatedAttributes$Position;
 
-.field private final mDefaultLineColorDark:Landroid/graphics/Color;
+.field private mDefaultLineColorDark:Landroid/graphics/Color;
 
-.field private final mDefaultLineColorLight:Landroid/graphics/Color;
+.field private mDefaultLineColorLight:Landroid/graphics/Color;
 
 .field private mDefaultLineWidth:F
 
@@ -3437,5 +3437,122 @@
     invoke-virtual {p0, p1, p2, v0, v1}, Lcom/google/oslo/ui/glow/animations/AnimationController;->updateColors(ZZJ)V
 
     .line 499
+    return-void
+.end method
+
+# Motion Sense page: reload the glow colors with the current aware_glow_custom
+# and aware_glow_hue. The default arrays are updated in place, so the next
+# updateColors() animates to the new colors.
+.method private static loadGlowColor(Landroid/content/res/Resources;I)Landroid/graphics/Color;
+    .locals 1
+
+    const/4 v0, 0x0
+
+    invoke-virtual {p0, p1, v0}, Landroid/content/res/Resources;->getColor(ILandroid/content/res/Resources$Theme;)I
+
+    move-result v0
+
+    invoke-static {v0}, Lcom/google/oslo/OsloTweaks;->tintGlow(I)I
+
+    move-result v0
+
+    invoke-static {v0}, Landroid/graphics/Color;->valueOf(I)Landroid/graphics/Color;
+
+    move-result-object v0
+
+    return-object v0
+.end method
+
+.method public reloadGlowColors(Landroid/content/res/Resources;)V
+    .locals 4
+
+    if-nez p1, :have_res
+
+    return-void
+
+    :have_res
+    iget-object v1, p0, Lcom/google/oslo/ui/glow/animations/AnimationController;->mDefaultGlowColorsLight:[Landroid/graphics/Color;
+
+    const v2, 0x7f050019
+
+    invoke-static {p1, v2}, Lcom/google/oslo/ui/glow/animations/AnimationController;->loadGlowColor(Landroid/content/res/Resources;I)Landroid/graphics/Color;
+
+    move-result-object v2
+
+    const/4 v3, 0
+
+    aput-object v2, v1, v3
+    iget-object v1, p0, Lcom/google/oslo/ui/glow/animations/AnimationController;->mDefaultGlowColorsLight:[Landroid/graphics/Color;
+
+    const v2, 0x7f05001a
+
+    invoke-static {p1, v2}, Lcom/google/oslo/ui/glow/animations/AnimationController;->loadGlowColor(Landroid/content/res/Resources;I)Landroid/graphics/Color;
+
+    move-result-object v2
+
+    const/4 v3, 1
+
+    aput-object v2, v1, v3
+    iget-object v1, p0, Lcom/google/oslo/ui/glow/animations/AnimationController;->mDefaultGlowColorsLight:[Landroid/graphics/Color;
+
+    const v2, 0x7f05001b
+
+    invoke-static {p1, v2}, Lcom/google/oslo/ui/glow/animations/AnimationController;->loadGlowColor(Landroid/content/res/Resources;I)Landroid/graphics/Color;
+
+    move-result-object v2
+
+    const/4 v3, 2
+
+    aput-object v2, v1, v3
+    iget-object v1, p0, Lcom/google/oslo/ui/glow/animations/AnimationController;->mDefaultGlowColorsDark:[Landroid/graphics/Color;
+
+    const v2, 0x7f050011
+
+    invoke-static {p1, v2}, Lcom/google/oslo/ui/glow/animations/AnimationController;->loadGlowColor(Landroid/content/res/Resources;I)Landroid/graphics/Color;
+
+    move-result-object v2
+
+    const/4 v3, 0
+
+    aput-object v2, v1, v3
+    iget-object v1, p0, Lcom/google/oslo/ui/glow/animations/AnimationController;->mDefaultGlowColorsDark:[Landroid/graphics/Color;
+
+    const v2, 0x7f050012
+
+    invoke-static {p1, v2}, Lcom/google/oslo/ui/glow/animations/AnimationController;->loadGlowColor(Landroid/content/res/Resources;I)Landroid/graphics/Color;
+
+    move-result-object v2
+
+    const/4 v3, 1
+
+    aput-object v2, v1, v3
+    iget-object v1, p0, Lcom/google/oslo/ui/glow/animations/AnimationController;->mDefaultGlowColorsDark:[Landroid/graphics/Color;
+
+    const v2, 0x7f050013
+
+    invoke-static {p1, v2}, Lcom/google/oslo/ui/glow/animations/AnimationController;->loadGlowColor(Landroid/content/res/Resources;I)Landroid/graphics/Color;
+
+    move-result-object v2
+
+    const/4 v3, 2
+
+    aput-object v2, v1, v3
+
+    const v2, 0x7f05001e
+
+    invoke-static {p1, v2}, Lcom/google/oslo/ui/glow/animations/AnimationController;->loadGlowColor(Landroid/content/res/Resources;I)Landroid/graphics/Color;
+
+    move-result-object v2
+
+    iput-object v2, p0, Lcom/google/oslo/ui/glow/animations/AnimationController;->mDefaultLineColorLight:Landroid/graphics/Color;
+
+    const v2, 0x7f050015
+
+    invoke-static {p1, v2}, Lcom/google/oslo/ui/glow/animations/AnimationController;->loadGlowColor(Landroid/content/res/Resources;I)Landroid/graphics/Color;
+
+    move-result-object v2
+
+    iput-object v2, p0, Lcom/google/oslo/ui/glow/animations/AnimationController;->mDefaultLineColorDark:Landroid/graphics/Color;
+
     return-void
 .end method
