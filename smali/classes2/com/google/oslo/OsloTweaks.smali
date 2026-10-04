@@ -96,6 +96,65 @@
     return-object v1
 .end method
 
+# Glow brightness factor: 0 when aware_glow_show is off, else
+# aware_glow_brightness / 100 (default 100 -> 1.0). Multiplied into mOpacity.
+.method public static glowOpacityFactor()F
+    .locals 2
+
+    const-string v0, "aware_glow_show"
+
+    const/4 v1, 0x1
+
+    invoke-static {v0, v1}, Lcom/google/oslo/OsloTweaks;->getInt(Ljava/lang/String;I)I
+
+    move-result v0
+
+    if-nez v0, :shown
+
+    const/4 v0, 0x0
+
+    return v0
+
+    :shown
+    const-string v0, "aware_glow_brightness"
+
+    const/16 v1, 0x64
+
+    invoke-static {v0, v1}, Lcom/google/oslo/OsloTweaks;->getInt(Ljava/lang/String;I)I
+
+    move-result v0
+
+    int-to-float v0, v0
+
+    const/high16 v1, 0x42c80000    # 100.0f
+
+    div-float/2addr v0, v1
+
+    return v0
+.end method
+
+# Glow size factor: aware_glow_size / 100 (default 100 -> 1.0, range 50-150).
+# Multiplied into the glow radius.
+.method public static glowSizeFactor()F
+    .locals 2
+
+    const-string v0, "aware_glow_size"
+
+    const/16 v1, 0x64
+
+    invoke-static {v0, v1}, Lcom/google/oslo/OsloTweaks;->getInt(Ljava/lang/String;I)I
+
+    move-result v0
+
+    int-to-float v0, v0
+
+    const/high16 v1, 0x42c80000    # 100.0f
+
+    div-float/2addr v0, v1
+
+    return v0
+.end method
+
 # True if pkg is on the media app list: aware_media_apps when it is set
 # (written by the Motion Sense page), otherwise Google's whitelist.
 .method public static isListedMediaApp(Ljava/lang/String;Ljava/util/Set;)Z
@@ -213,7 +272,7 @@
 # Rotates a stock glow color (average hue 215, blue) to aware_glow_hue,
 # keeping its saturation, brightness and alpha.
 .method public static tintGlow(I)I
-    .locals 5
+    .locals 6
     .param p0, "color"    # I
 
     const-string v0, "aware_glow_custom"
@@ -229,6 +288,34 @@
     return p0
 
     :custom
+    const-string v0, "aware_glow_rainbow"
+
+    const/4 v1, 0x0
+
+    invoke-static {v0, v1}, Lcom/google/oslo/OsloTweaks;->getInt(Ljava/lang/String;I)I
+
+    move-result v0
+
+    if-eqz v0, :fixed_hue
+
+    # rainbow: hue = (uptimeMillis / 16) % 360, a new color each activation
+    invoke-static {}, Landroid/os/SystemClock;->uptimeMillis()J
+
+    move-result-wide v2
+
+    const-wide/16 v4, 0x10
+
+    div-long/2addr v2, v4
+
+    const-wide/16 v4, 0x168
+
+    rem-long/2addr v2, v4
+
+    long-to-float v0, v2
+
+    goto :have_hue
+
+    :fixed_hue
     const-string v0, "aware_glow_hue"
 
     const/16 v1, 0x10e
@@ -239,6 +326,7 @@
 
     int-to-float v0, v0
 
+    :have_hue
     const/4 v1, 0x3
 
     new-array v1, v1, [F
@@ -350,6 +438,38 @@
     invoke-virtual {v0, v2, v3, v1}, Landroid/content/ContentResolver;->registerContentObserver(Landroid/net/Uri;ZLandroid/database/ContentObserver;)V
 
     const-string v2, "aware_glow_hue"
+
+    invoke-static {v2}, Landroid/provider/Settings$Secure;->getUriFor(Ljava/lang/String;)Landroid/net/Uri;
+
+    move-result-object v2
+
+    invoke-virtual {v0, v2, v3, v1}, Landroid/content/ContentResolver;->registerContentObserver(Landroid/net/Uri;ZLandroid/database/ContentObserver;)V
+
+    const-string v2, "aware_glow_show"
+
+    invoke-static {v2}, Landroid/provider/Settings$Secure;->getUriFor(Ljava/lang/String;)Landroid/net/Uri;
+
+    move-result-object v2
+
+    invoke-virtual {v0, v2, v3, v1}, Landroid/content/ContentResolver;->registerContentObserver(Landroid/net/Uri;ZLandroid/database/ContentObserver;)V
+
+    const-string v2, "aware_glow_brightness"
+
+    invoke-static {v2}, Landroid/provider/Settings$Secure;->getUriFor(Ljava/lang/String;)Landroid/net/Uri;
+
+    move-result-object v2
+
+    invoke-virtual {v0, v2, v3, v1}, Landroid/content/ContentResolver;->registerContentObserver(Landroid/net/Uri;ZLandroid/database/ContentObserver;)V
+
+    const-string v2, "aware_glow_size"
+
+    invoke-static {v2}, Landroid/provider/Settings$Secure;->getUriFor(Ljava/lang/String;)Landroid/net/Uri;
+
+    move-result-object v2
+
+    invoke-virtual {v0, v2, v3, v1}, Landroid/content/ContentResolver;->registerContentObserver(Landroid/net/Uri;ZLandroid/database/ContentObserver;)V
+
+    const-string v2, "aware_glow_rainbow"
 
     invoke-static {v2}, Landroid/provider/Settings$Secure;->getUriFor(Ljava/lang/String;)Landroid/net/Uri;
 

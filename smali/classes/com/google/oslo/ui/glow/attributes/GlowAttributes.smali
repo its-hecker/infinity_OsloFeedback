@@ -228,9 +228,18 @@
 .end method
 
 .method public setGlowRadius(FF)V
-    .locals 1
+    .locals 2
     .param p1, "width"    # F
     .param p2, "height"    # F
+
+    # OsloTweaks: scale the glow size by aware_glow_size
+    invoke-static {}, Lcom/google/oslo/OsloTweaks;->glowSizeFactor()F
+
+    move-result v1
+
+    mul-float/2addr p1, v1
+
+    mul-float/2addr p2, v1
 
     .line 48
     iget-object v0, p0, Lcom/google/oslo/ui/glow/attributes/GlowAttributes;->mRadius:Landroid/graphics/PointF;
@@ -247,8 +256,15 @@
 .end method
 
 .method public setOpacity(F)V
-    .locals 0
+    .locals 1
     .param p1, "opacity"    # F
+
+    # OsloTweaks: scale glow brightness by aware_glow_brightness / show switch
+    invoke-static {}, Lcom/google/oslo/OsloTweaks;->glowOpacityFactor()F
+
+    move-result v0
+
+    mul-float/2addr p1, v0
 
     .line 76
     iput p1, p0, Lcom/google/oslo/ui/glow/attributes/GlowAttributes;->mOpacity:F
