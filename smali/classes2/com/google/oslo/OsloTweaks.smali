@@ -130,6 +130,12 @@
 
     div-float/2addr v0, v1
 
+    invoke-static {}, Lcom/google/oslo/OsloTweaks;->nightDimFactor()F
+
+    move-result v1
+
+    mul-float/2addr v0, v1
+
     return v0
 .end method
 
@@ -151,6 +157,116 @@
     const/high16 v1, 0x42c80000    # 100.0f
 
     div-float/2addr v0, v1
+
+    return v0
+.end method
+
+# System accent (Material You) hue 0-359 for the glow; 270 as a fallback.
+.method public static accentHue()F
+    .locals 5
+
+    invoke-static {}, Landroid/app/ActivityThread;->currentApplication()Landroid/app/Application;
+
+    move-result-object v0
+
+    if-nez v0, :have_app
+
+    const v0, 0x43870000    # 270.0f
+
+    return v0
+
+    :have_app
+    invoke-virtual {v0}, Landroid/app/Application;->getResources()Landroid/content/res/Resources;
+
+    move-result-object v1
+
+    const-string v2, "system_accent1_500"
+
+    const-string v3, "color"
+
+    const-string v4, "android"
+
+    invoke-virtual {v1, v2, v3, v4}, Landroid/content/res/Resources;->getIdentifier(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)I
+
+    move-result v1
+
+    if-nez v1, :have_id
+
+    const v0, 0x43870000    # 270.0f
+
+    return v0
+
+    :have_id
+    invoke-virtual {v0, v1}, Landroid/content/Context;->getColor(I)I
+
+    move-result v0
+
+    const/4 v1, 0x3
+
+    new-array v1, v1, [F
+
+    invoke-static {v0, v1}, Landroid/graphics/Color;->colorToHSV(I[F)V
+
+    const/4 v0, 0x0
+
+    aget v0, v1, v0
+
+    return v0
+.end method
+
+# Night-dim multiplier: 0.4 inside the night window (aware_glow_night_start..6)
+# when aware_glow_night is on, otherwise 1.0.
+.method public static nightDimFactor()F
+    .locals 3
+
+    const-string v0, "aware_glow_night"
+
+    const/4 v1, 0x0
+
+    invoke-static {v0, v1}, Lcom/google/oslo/OsloTweaks;->getInt(Ljava/lang/String;I)I
+
+    move-result v0
+
+    if-eqz v0, :not_dim
+
+    invoke-static {}, Ljava/time/LocalTime;->now()Ljava/time/LocalTime;
+
+    move-result-object v0
+
+    invoke-virtual {v0}, Ljava/time/LocalTime;->getHour()I
+
+    move-result v0
+
+    const-string v1, "aware_glow_night_start"
+
+    const/16 v2, 0x16
+
+    invoke-static {v1, v2}, Lcom/google/oslo/OsloTweaks;->getInt(Ljava/lang/String;I)I
+
+    move-result v1
+
+    const/4 v2, 0x6
+
+    if-lt v1, v2, :non_wrap
+
+    if-ge v0, v1, :dim
+
+    if-lt v0, v2, :dim
+
+    goto :not_dim
+
+    :non_wrap
+    if-lt v0, v1, :not_dim
+
+    if-ge v0, v2, :not_dim
+
+    :dim
+    const v0, 0x3ecccccd    # 0.4f
+
+    return v0
+
+    :not_dim
+    const/high16 v0, 0x3f800000    # 1.0f
 
     return v0
 .end method
@@ -288,6 +404,23 @@
     return p0
 
     :custom
+    const-string v0, "aware_glow_accent"
+
+    const/4 v1, 0x0
+
+    invoke-static {v0, v1}, Lcom/google/oslo/OsloTweaks;->getInt(Ljava/lang/String;I)I
+
+    move-result v0
+
+    if-eqz v0, :not_accent
+
+    invoke-static {}, Lcom/google/oslo/OsloTweaks;->accentHue()F
+
+    move-result v0
+
+    goto :have_hue
+
+    :not_accent
     const-string v0, "aware_glow_rainbow"
 
     const/4 v1, 0x0
@@ -470,6 +603,30 @@
     invoke-virtual {v0, v2, v3, v1}, Landroid/content/ContentResolver;->registerContentObserver(Landroid/net/Uri;ZLandroid/database/ContentObserver;)V
 
     const-string v2, "aware_glow_rainbow"
+
+    invoke-static {v2}, Landroid/provider/Settings$Secure;->getUriFor(Ljava/lang/String;)Landroid/net/Uri;
+
+    move-result-object v2
+
+    invoke-virtual {v0, v2, v3, v1}, Landroid/content/ContentResolver;->registerContentObserver(Landroid/net/Uri;ZLandroid/database/ContentObserver;)V
+
+    const-string v2, "aware_glow_accent"
+
+    invoke-static {v2}, Landroid/provider/Settings$Secure;->getUriFor(Ljava/lang/String;)Landroid/net/Uri;
+
+    move-result-object v2
+
+    invoke-virtual {v0, v2, v3, v1}, Landroid/content/ContentResolver;->registerContentObserver(Landroid/net/Uri;ZLandroid/database/ContentObserver;)V
+
+    const-string v2, "aware_glow_night"
+
+    invoke-static {v2}, Landroid/provider/Settings$Secure;->getUriFor(Ljava/lang/String;)Landroid/net/Uri;
+
+    move-result-object v2
+
+    invoke-virtual {v0, v2, v3, v1}, Landroid/content/ContentResolver;->registerContentObserver(Landroid/net/Uri;ZLandroid/database/ContentObserver;)V
+
+    const-string v2, "aware_glow_night_start"
 
     invoke-static {v2}, Landroid/provider/Settings$Secure;->getUriFor(Ljava/lang/String;)Landroid/net/Uri;
 
