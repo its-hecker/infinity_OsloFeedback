@@ -15,5 +15,8 @@
 
 
 # virtual methods
+.method public abstract refreshExperimentColors()V
+.end method
+
 .method public abstract refreshExperimentVisibility()V
 .end method

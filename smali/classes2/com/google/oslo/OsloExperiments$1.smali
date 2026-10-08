@@ -18,7 +18,7 @@
 .method constructor <init>()V
     .registers 1
 
-    .line 43
+    .line 46
     invoke-direct {p0}, Landroid/content/BroadcastReceiver;-><init>()V
 
     return-void
@@ -29,26 +29,26 @@
 .method public onReceive(Landroid/content/Context;Landroid/content/Intent;)V
     .registers 11
 
-    .line 45
+    .line 48
     const-string p1, "command"
 
     invoke-virtual {p2, p1}, Landroid/content/Intent;->getStringExtra(Ljava/lang/String;)Ljava/lang/String;
 
     move-result-object p1
 
-    .line 46
+    .line 49
     const-string v0, "token"
 
     invoke-virtual {p2, v0}, Landroid/content/Intent;->getStringExtra(Ljava/lang/String;)Ljava/lang/String;
 
     move-result-object v2
 
-    .line 47
+    .line 50
     invoke-static {}, Landroid/os/SystemClock;->elapsedRealtime()J
 
     move-result-wide v6
 
-    .line 48
+    .line 51
     const-string v0, "lease"
 
     invoke-virtual {v0, p1}, Ljava/lang/String;->equals(Ljava/lang/Object;)Z
@@ -63,7 +63,7 @@
 
     goto :goto_56
 
-    .line 49
+    .line 52
     :cond_1e
     const-string v0, "end"
 
@@ -82,7 +82,7 @@
 
     goto :goto_56
 
-    .line 50
+    .line 53
     :cond_2f
     const-string v0, "preview"
 
@@ -92,7 +92,7 @@
 
     if-eqz p1, :cond_56
 
-    .line 51
+    .line 54
     sget-object v1, Lcom/google/oslo/OsloExperiments;->POLICY:Lcom/google/oslo/ExperimentPolicy;
 
     const-string p1, "style"
@@ -103,7 +103,7 @@
 
     move-result v3
 
-    .line 52
+    .line 55
     const-string p1, "speed"
 
     const/16 v0, 0x64
@@ -114,21 +114,21 @@
 
     sget-boolean p1, Lcom/google/oslo/OsloExperiments;->trails:Z
 
-    .line 53
+    .line 56
     const-string v0, "trails"
 
     invoke-virtual {p2, v0, p1}, Landroid/content/Intent;->getBooleanExtra(Ljava/lang/String;Z)Z
 
     move-result v5
 
-    .line 51
+    .line 54
     invoke-virtual/range {v1 .. v7}, Lcom/google/oslo/ExperimentPolicy;->preview(Ljava/lang/String;IIZJ)V
 
-    .line 54
+    .line 57
     # invokes: Lcom/google/oslo/OsloExperiments;->startFrames()V
     invoke-static {}, Lcom/google/oslo/OsloExperiments;->access$000()V
 
-    .line 56
+    .line 59
     :cond_56
     :goto_56
     return-void

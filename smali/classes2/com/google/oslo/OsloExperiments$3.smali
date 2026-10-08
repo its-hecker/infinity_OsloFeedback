@@ -21,7 +21,7 @@
 .method constructor <init>()V
     .registers 1
 
-    .line 150
+    .line 171
     invoke-direct {p0}, Ljava/lang/Object;-><init>()V
 
     return-void
@@ -32,24 +32,24 @@
 .method public run()V
     .registers 8
 
-    .line 152
+    .line 173
     invoke-static {}, Landroid/os/SystemClock;->elapsedRealtime()J
 
     move-result-wide v0
 
-    .line 153
+    .line 174
     sget-object v2, Lcom/google/oslo/OsloExperiments;->POLICY:Lcom/google/oslo/ExperimentPolicy;
 
     invoke-virtual {v2, v0, v1}, Lcom/google/oslo/ExperimentPolicy;->previewing(J)Z
 
     move-result v2
 
-    .line 154
+    .line 175
     sget-wide v3, Lcom/google/oslo/OsloExperiments;->gestureAt:J
 
     sub-long/2addr v0, v3
 
-    .line 155
+    .line 176
     const/4 v3, 0x0
 
     const/4 v4, 0x1
@@ -92,11 +92,11 @@
     :goto_2c
     move v0, v4
 
-    .line 156
+    .line 177
     :goto_2d
     nop
 
-    .line 157
+    .line 178
     # getter for: Lcom/google/oslo/OsloExperiments;->VIEWS:Ljava/util/ArrayList;
     invoke-static {}, Lcom/google/oslo/OsloExperiments;->access$200()Ljava/util/ArrayList;
 
@@ -113,7 +113,7 @@
     :goto_38
     if-ltz v1, :cond_71
 
-    .line 158
+    .line 179
     # getter for: Lcom/google/oslo/OsloExperiments;->VIEWS:Ljava/util/ArrayList;
     invoke-static {}, Lcom/google/oslo/OsloExperiments;->access$200()Ljava/util/ArrayList;
 
@@ -131,7 +131,7 @@
 
     check-cast v5, Landroid/opengl/GLSurfaceView;
 
-    .line 159
+    .line 180
     if-nez v5, :cond_54
 
     # getter for: Lcom/google/oslo/OsloExperiments;->VIEWS:Ljava/util/ArrayList;
@@ -143,7 +143,7 @@
 
     goto :goto_6e
 
-    .line 160
+    .line 181
     :cond_54
     instance-of v6, v5, Lcom/google/oslo/OsloExperiments$Surface;
 
@@ -155,7 +155,7 @@
 
     invoke-interface {v6}, Lcom/google/oslo/OsloExperiments$Surface;->refreshExperimentVisibility()V
 
-    .line 161
+    .line 182
     :cond_5e
     invoke-virtual {v5}, Landroid/opengl/GLSurfaceView;->isAttachedToWindow()Z
 
@@ -169,19 +169,19 @@
 
     if-nez v6, :cond_6e
 
-    .line 162
+    .line 183
     invoke-virtual {v5}, Landroid/opengl/GLSurfaceView;->requestRender()V
 
     move v2, v4
 
-    .line 157
+    .line 178
     :cond_6e
     :goto_6e
     add-int/lit8 v1, v1, -0x1
 
     goto :goto_38
 
-    .line 166
+    .line 187
     :cond_71
     if-eqz v0, :cond_83
 
@@ -202,12 +202,12 @@
 
     goto :goto_86
 
-    .line 167
+    .line 188
     :cond_83
     # setter for: Lcom/google/oslo/OsloExperiments;->pumping:Z
     invoke-static {v3}, Lcom/google/oslo/OsloExperiments;->access$402(Z)Z
 
-    .line 168
+    .line 189
     :goto_86
     return-void
 .end method

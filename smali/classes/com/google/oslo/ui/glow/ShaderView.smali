@@ -182,3 +182,10 @@
     invoke-super {p0, v0}, Landroid/opengl/GLSurfaceView;->setVisibility(I)V
     return-void
 .end method
+
+.method public refreshExperimentColors()V
+    .locals 1
+    iget-object v0, p0, Lcom/google/oslo/ui/glow/ShaderView;->mGlow:Lcom/google/oslo/ui/glow/ShaderGlow;
+    invoke-virtual {v0}, Lcom/google/oslo/ui/glow/ShaderGlow;->onGlowColorChanged()V
+    return-void
+.end method

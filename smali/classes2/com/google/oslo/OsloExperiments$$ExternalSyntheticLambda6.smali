@@ -7,17 +7,17 @@
 
 
 # instance fields
-.field public final synthetic f$0:Landroid/opengl/GLSurfaceView;
+.field public final synthetic f$0:Landroid/content/Context;
 
 
 # direct methods
-.method public synthetic constructor <init>(Landroid/opengl/GLSurfaceView;)V
+.method public synthetic constructor <init>(Landroid/content/Context;)V
     .registers 2
 
     .line 0
     invoke-direct {p0}, Ljava/lang/Object;-><init>()V
 
-    iput-object p1, p0, Lcom/google/oslo/OsloExperiments$$ExternalSyntheticLambda6;->f$0:Landroid/opengl/GLSurfaceView;
+    iput-object p1, p0, Lcom/google/oslo/OsloExperiments$$ExternalSyntheticLambda6;->f$0:Landroid/content/Context;
 
     return-void
 .end method
@@ -28,9 +28,9 @@
     .registers 2
 
     .line 0
-    iget-object v0, p0, Lcom/google/oslo/OsloExperiments$$ExternalSyntheticLambda6;->f$0:Landroid/opengl/GLSurfaceView;
+    iget-object v0, p0, Lcom/google/oslo/OsloExperiments$$ExternalSyntheticLambda6;->f$0:Landroid/content/Context;
 
-    invoke-static {v0}, Lcom/google/oslo/OsloExperiments;->lambda$detach$5(Landroid/opengl/GLSurfaceView;)V
+    invoke-static {v0}, Lcom/google/oslo/OsloExperiments;->lambda$serviceStarted$1(Landroid/content/Context;)V
 
     return-void
 .end method

@@ -45,7 +45,7 @@ def uniform(name,value):
  loc=gl('glGetUniformLocation',I,U,C.c_char_p)(program,name.encode())
  gl('glUniform1f',None,I,F)(loc,value)
 loc=gl('glGetUniformLocation',I,U,C.c_char_p)(program,b'color');gl('glUniform3f',None,I,F,F,F)(loc,.1,.7,1)
-for name,value in {'age':.25,'tempo':1,'alpha':1,'trail':0,'side':1,'strip':1,'aspect':.25}.items():uniform(name,value)
+for name,value in {'age':.25,'tempo':1,'alpha':1,'trail':0,'side':1,'strip':1,'aspect':.25,'album':0}.items():uniform(name,value)
 outputs=[]
 for style in range(5):
  uniform('style',style);gl('glClearColor',None,F,F,F,F)(0,0,0,0);gl('glClear',None,U)(0x4000)
@@ -54,6 +54,21 @@ for style in range(5):
  assert max(bytes(pixels)[3::4])>0,style
  outputs.append(bytes(pixels))
 assert len(set(outputs))==5
+uniform('album',1)
+for style in range(5):
+ uniform('style',style)
+ covers=[]
+ for color in [(1,.15,.1),(.1,.8,1)]:
+  gl('glUniform3f',None,I,F,F,F)(loc,*color)
+  gl('glDrawArrays',None,U,I,I)(5,0,4)
+  pixels=(C.c_ubyte*(240*60*4))();gl('glReadPixels',None,I,I,I,I,U,U,vp)(0,0,240,60,0x1908,0x1401,C.cast(pixels,vp))
+  visible=[bytes(pixels)[i:i+3] for i in range(0,len(pixels),4) if pixels[i+3]>32]
+  assert visible,style
+  # Every style follows the artwork hue, including Neon and Aurora's optional palettes.
+  assert all((rgb[0]>rgb[2] if color[0]>.5 else rgb[2]>rgb[0]) for rgb in visible),style
+  covers.append(bytes(pixels))
+ assert covers[0]!=covers[1],style
+uniform('album',0)
 uniform('strip',0);uniform('trail',1);uniform('style',0)
 trails=[]
 for side in [-1,1]:
@@ -66,4 +81,4 @@ uniform('age',1);gl('glDrawArrays',None,U,I,I)(5,0,4)
 pixels=(C.c_ubyte*(240*60*4))();gl('glReadPixels',None,I,I,I,I,U,U,vp)(0,0,240,60,0x1908,0x1401,C.cast(pixels,vp))
 assert max(bytes(pixels)[3::4])==0
 assert gl('glGetError',U)()==0
-print('EGL/GLES: vertex + fragment compiled/linked; five visible styles, directional trails and expiry rendered without GL errors')
+print('EGL/GLES: five styles, both artwork palettes, directional trails and expiry rendered without GL errors')

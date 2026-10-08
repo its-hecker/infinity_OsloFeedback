@@ -6,7 +6,7 @@ import zipfile
 
 required = {b'Lcom/google/oslo/' + name + b';' for name in (
     b'AirDjController', b'AirDjPolicy', b'OsloExperiments', b'OsloExperiments$Surface',
-    b'ExperimentPolicy', b'LabGlowRenderer')}
+    b'ExperimentPolicy', b'LabGlowRenderer', b'AlbumArtController', b'ArtworkPalette')}
 owners = {}
 with zipfile.ZipFile(sys.argv[1]) as apk:
     dexes = [n for n in apk.namelist() if n.startswith('classes') and n.endswith('.dex')]

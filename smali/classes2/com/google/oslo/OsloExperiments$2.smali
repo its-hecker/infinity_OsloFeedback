@@ -18,7 +18,7 @@
 .method constructor <init>(Landroid/os/Handler;)V
     .registers 2
 
-    .line 60
+    .line 63
     invoke-direct {p0, p1}, Landroid/database/ContentObserver;-><init>(Landroid/os/Handler;)V
 
     return-void
@@ -29,7 +29,7 @@
 .method public onChange(Z)V
     .registers 2
 
-    .line 61
+    .line 64
     # invokes: Lcom/google/oslo/OsloExperiments;->readSettings()V
     invoke-static {}, Lcom/google/oslo/OsloExperiments;->access$100()V
 

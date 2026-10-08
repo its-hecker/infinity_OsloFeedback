@@ -408,6 +408,13 @@
     move-result v0
     goto :have_hue
     :normal_tint
+    invoke-static {}, Lcom/google/oslo/AlbumArtController;->getColor()I
+    move-result v0
+    if-eqz v0, :saved_tint
+    invoke-static {p0}, Lcom/google/oslo/AlbumArtController;->tint(I)I
+    move-result v0
+    return v0
+    :saved_tint
     const-string v0, "aware_glow_custom"
 
     const/4 v1, 0x1
