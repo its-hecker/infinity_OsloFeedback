@@ -39,6 +39,12 @@
     .param p1, "next"    # Z
     .param p2, "flickOutput"    # Lcom/google/oslo/service/serviceinterface/output/OsloFlickOutput;
 
+    invoke-static {}, Lcom/google/oslo/OsloExperiments;->isLabActive()Z
+    move-result v0
+    if-eqz v0, :lab_skip_continue
+    return-void
+    :lab_skip_continue
+
     # Consume Air DJ gestures before the original skip loop; one target only.
     invoke-virtual {p0}, Lcom/google/oslo/service/actions/SkipMediaTrack;->getContext()Landroid/content/Context;
     move-result-object v0

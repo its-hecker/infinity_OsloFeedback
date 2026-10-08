@@ -1,4 +1,4 @@
-name: Build experimental Air DJ
+name: Build experimental Motion Lab
 on:
   push:
     branches: [features-experimental]
@@ -26,6 +26,11 @@ jobs:
           curl --fail --location --retry 3 https://dl.google.com/dl/android/maven2/com/android/tools/r8/8.7.18/r8-8.7.18.jar -o "$RUNNER_TEMP/airdj-tools/r8.jar"
           yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null || true
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-35' 'build-tools;35.0.0'
+      - name: Check glow shaders
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y libegl1 libegl-mesa0 libgl1-mesa-dri
+          python3 airdj/tests/test_glow_shader.py
       - name: Test controller and rebuild plugin
         run: |
           APK_EDITOR_JAR="$RUNNER_TEMP/airdj-tools/APKEditor.jar" \
@@ -41,12 +46,15 @@ jobs:
           "$BT/apksigner" sign --ks "$RUNNER_TEMP/airdj-validation.jks" --ks-pass pass:android --key-pass pass:android --out "$RUNNER_TEMP/OsloFeedback-AirDJ-validation.apk" "$RUNNER_TEMP/airdj-aligned.apk"
           "$BT/apksigner" verify --verbose "$RUNNER_TEMP/OsloFeedback-AirDJ-validation.apk"
           "$BT/zipalign" -c -p 4 "$RUNNER_TEMP/OsloFeedback-AirDJ-validation.apk"
+          python3 airdj/tests/check_apk.py "$RUNNER_TEMP/OsloFeedback-AirDJ-validation.apk"
           # Decode the finished DEX and prove the feature classes survived packaging.
           mkdir -p "$RUNNER_TEMP/airdj-verify"
           unzip -p "$RUNNER_TEMP/OsloFeedback-AirDJ-validation.apk" classes2.dex > "$RUNNER_TEMP/airdj-verify/classes2.dex"
           java -cp "$RUNNER_TEMP/airdj-tools/APKEditor.jar" org.jf.baksmali.Main disassemble "$RUNNER_TEMP/airdj-verify/classes2.dex" -o "$RUNNER_TEMP/airdj-verify/smali"
           test -s "$RUNNER_TEMP/airdj-verify/smali/com/google/oslo/AirDjController.smali"
           test -s "$RUNNER_TEMP/airdj-verify/smali/com/google/oslo/AirDjPolicy.smali"
+          test -s "$RUNNER_TEMP/airdj-verify/smali/com/google/oslo/OsloExperiments.smali"
+          test -s "$RUNNER_TEMP/airdj-verify/smali/com/google/oslo/LabGlowRenderer.smali"
       - uses: actions/upload-artifact@v4
         with:
           name: oslo-air-dj-validation

@@ -7,6 +7,7 @@
 
 
 # instance fields
+.field private final mLab:Lcom/google/oslo/LabGlowRenderer;
 .field private final mGlow:Lcom/google/oslo/ui/glow/ShaderGlow;
 
 
@@ -25,6 +26,10 @@
     invoke-direct {v0, p1, p2}, Lcom/google/oslo/ui/glow/ShaderGlow;-><init>(Landroid/content/Context;Landroid/content/Context;)V
 
     iput-object v0, p0, Lcom/google/oslo/ui/glow/ShaderRenderer;->mGlow:Lcom/google/oslo/ui/glow/ShaderGlow;
+
+    new-instance v0, Lcom/google/oslo/LabGlowRenderer;
+    invoke-direct {v0}, Lcom/google/oslo/LabGlowRenderer;-><init>()V
+    iput-object v0, p0, Lcom/google/oslo/ui/glow/ShaderRenderer;->mLab:Lcom/google/oslo/LabGlowRenderer;
 
     .line 16
     return-void
@@ -76,6 +81,9 @@
 
     invoke-virtual {v1}, Lcom/google/oslo/ui/glow/ShaderGlow;->draw()V
 
+    iget-object v1, p0, Lcom/google/oslo/ui/glow/ShaderRenderer;->mLab:Lcom/google/oslo/LabGlowRenderer;
+    invoke-virtual {v1}, Lcom/google/oslo/LabGlowRenderer;->draw()V
+
     .line 44
     invoke-static {v0}, Landroid/opengl/GLES20;->glDisable(I)V
 
@@ -99,6 +107,9 @@
 
     invoke-virtual {v0, p2, p3}, Lcom/google/oslo/ui/glow/ShaderGlow;->onSizeChanged(II)V
 
+    iget-object v0, p0, Lcom/google/oslo/ui/glow/ShaderRenderer;->mLab:Lcom/google/oslo/LabGlowRenderer;
+    invoke-virtual {v0, p2, p3}, Lcom/google/oslo/LabGlowRenderer;->resize(II)V
+
     .line 32
     return-void
 .end method
@@ -117,6 +128,9 @@
     iget-object v0, p0, Lcom/google/oslo/ui/glow/ShaderRenderer;->mGlow:Lcom/google/oslo/ui/glow/ShaderGlow;
 
     invoke-virtual {v0}, Lcom/google/oslo/ui/glow/ShaderGlow;->init()V
+
+    iget-object v0, p0, Lcom/google/oslo/ui/glow/ShaderRenderer;->mLab:Lcom/google/oslo/LabGlowRenderer;
+    invoke-virtual {v0}, Lcom/google/oslo/LabGlowRenderer;->reset()V
 
     .line 26
     return-void

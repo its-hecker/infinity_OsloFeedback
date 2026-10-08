@@ -73,3 +73,33 @@ Hardware checks still needed:
 
 Logs use the `Oslo.AirDJ` tag. Native ROM/GoogleParts compilation and on-device
 testing cannot be replaced by the standalone plugin workflow.
+
+
+## Motion Lab additions
+
+GoogleParts exposes Touchless Game Arcade (Air Dodge / Target Rush), Gesture Training
+Room, Air Control Panel, and Glow Theme Studio on `features-experimental`. The first
+three bind Oslo's existing gesture service while resumed, subscribe to detected
+flick/tap/reach events and deduplicate regular/echo callbacks. No new continuous
+hand-position sensor is assumed. A foreground heartbeat renews a six-second,
+permission-protected lease that suppresses built-in media actions while the lab is
+open. Pausing the page unregisters listeners and ends the lease; expiry handles a
+missed cleanup. Alarm/call actions keep their stock behavior.
+
+Glow presets (Stock / Neon / Aurora / Pixel / Minimal), animation speed (50–200%)
+and directional Gesture Trails are opt-in Secure settings. The extra GLES pass
+uses the existing Oslo surface and redraws at most for the 1.2-second feedback or
+eight-second preview window. It restores the stock program, vertex buffer and
+visibility. Surface recreation resets its GL program. Preview commands carry a
+unique token and draft values in memory; they never write the saved theme. A stale
+page's cleanup cannot stop a newer page's session.
+
+The control panel targets one active media session and checks supported controls;
+Play / pause can resume a paused session. Flashlight permission is requested on
+use. The torch keeps the state selected by the user when the panel closes, while
+radar subscriptions stop. Default stock settings and the Air DJ switch are kept.
+
+Checks cover policy expiry/token isolation, game/lesson rules, existing Air DJ
+controller tests, public Android API compilation, AAPT resource linking, GLES
+shader rendering, DEX rebuilding, alignment and validation signing. These do not
+replace a full Android 17 ROM build and real Pixel 4 XL Soli/UI testing.

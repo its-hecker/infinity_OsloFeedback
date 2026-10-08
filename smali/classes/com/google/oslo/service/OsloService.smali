@@ -195,6 +195,8 @@
 
     iput-object v1, p0, Lcom/google/oslo/service/OsloService;->mOsloGestureTrigger:Lcom/google/oslo/service/OsloGestureTrigger;
 
+    invoke-static {p0}, Lcom/google/oslo/OsloExperiments;->serviceStarted(Landroid/content/Context;)V
+
     .line 132
     return-void
 .end method
@@ -209,4 +211,11 @@
     const/4 v0, 0x1
 
     return v0
+.end method
+
+.method public onDestroy()V
+    .locals 0
+    invoke-static {}, Lcom/google/oslo/OsloExperiments;->serviceStopped()V
+    invoke-super {p0}, Landroid/app/Service;->onDestroy()V
+    return-void
 .end method

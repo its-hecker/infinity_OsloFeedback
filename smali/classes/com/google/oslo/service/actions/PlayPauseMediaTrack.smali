@@ -1097,6 +1097,12 @@
     .locals 4
     .param p1, "gestureOutput"    # Landroid/os/Bundle;
 
+    invoke-static {}, Lcom/google/oslo/OsloExperiments;->isLabActive()Z
+    move-result v0
+    if-eqz v0, :lab_tap_continue
+    return-void
+    :lab_tap_continue
+
     .line 371
     new-instance v0, Lcom/google/oslo/service/serviceinterface/output/OsloTapOutput;
 

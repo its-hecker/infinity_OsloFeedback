@@ -181,7 +181,8 @@ with tempfile.TemporaryDirectory(prefix='airdj-tests-') as temp:
     test = temp / 'AirDjControllerTest.java'
     test.write_text(TEST)
     classes = temp / 'classes'
-    sources = list(temp.rglob('*.java')) + list((ROOT / 'airdj/src').rglob('*.java'))
+    sources = list(temp.rglob('*.java')) + [ROOT / 'airdj/src/com/google/oslo/AirDjPolicy.java',
+            ROOT / 'airdj/src/com/google/oslo/AirDjController.java']
     subprocess.run(['java', 'com.sun.tools.javac.Main', '-d', str(classes)]
                    + [str(p) for p in sources], check=True)
     subprocess.run(['java', '-cp', str(classes), 'com.google.oslo.AirDjControllerTest'], check=True)

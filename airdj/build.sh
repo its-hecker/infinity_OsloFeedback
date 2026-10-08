@@ -12,6 +12,10 @@ java com.sun.tools.javac.Main -d "$AIR_DJ_WORK/tests" \
     "$AIR_DJ_ROOT/airdj/src/com/google/oslo/AirDjPolicy.java" \
     "$AIR_DJ_ROOT/airdj/tests/com/google/oslo/AirDjPolicyTest.java"
 java -cp "$AIR_DJ_WORK/tests" com.google.oslo.AirDjPolicyTest
+java com.sun.tools.javac.Main -d "$AIR_DJ_WORK/tests" \
+    "$AIR_DJ_ROOT/airdj/src/com/google/oslo/ExperimentPolicy.java" \
+    "$AIR_DJ_ROOT/airdj/tests/com/google/oslo/ExperimentPolicyTest.java"
+java -cp "$AIR_DJ_WORK/tests" com.google.oslo.ExperimentPolicyTest
 python3 "$AIR_DJ_ROOT/airdj/tests/test_controller.py"
 java com.sun.tools.javac.Main -source 8 -target 8 -classpath "$ANDROID_JAR" \
     -d "$AIR_DJ_WORK/classes" "$AIR_DJ_ROOT"/airdj/src/com/google/oslo/*.java

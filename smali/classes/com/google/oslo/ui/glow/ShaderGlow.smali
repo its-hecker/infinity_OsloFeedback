@@ -864,6 +864,13 @@
 .method draw()V
     .locals 7
 
+    # Restore the stock vertex buffer after the experimental GL pass.
+    iget-object v0, p0, Lcom/google/oslo/ui/glow/ShaderGlow;->mProgram:Lcom/google/oslo/ui/glow/ShaderProgram;
+    const-string v1, "aPosition"
+    invoke-virtual {v0, v1}, Lcom/google/oslo/ui/glow/ShaderProgram;->getAttributeHandle(Ljava/lang/String;)I
+    move-result v0
+    invoke-direct {p0, v0}, Lcom/google/oslo/ui/glow/ShaderGlow;->enablePosition(I)V
+
     .line 133
     iget-boolean v0, p0, Lcom/google/oslo/ui/glow/ShaderGlow;->mAsleep:Z
 

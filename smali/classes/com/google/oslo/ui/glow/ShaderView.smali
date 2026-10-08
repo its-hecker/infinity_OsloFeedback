@@ -3,7 +3,11 @@
 .source "ShaderView.java"
 
 
+.implements Lcom/google/oslo/OsloExperiments$Surface;
+
 # instance fields
+.field private final mExperimentContext:Landroid/content/Context;
+.field private mStockVisibility:I
 .field private final mGlow:Lcom/google/oslo/ui/glow/ShaderGlow;
 
 .field private final mRenderer:Lcom/google/oslo/ui/glow/ShaderRenderer;
@@ -17,6 +21,8 @@
 
     .line 19
     invoke-direct {p0, p1}, Landroid/opengl/GLSurfaceView;-><init>(Landroid/content/Context;)V
+
+    iput-object p2, p0, Lcom/google/oslo/ui/glow/ShaderView;->mExperimentContext:Landroid/content/Context;
 
     .line 22
     const/4 v0, 0x2
@@ -143,5 +149,36 @@
     invoke-virtual {p0, v2, v1}, Lcom/google/oslo/ui/glow/ShaderView;->setLayerType(ILandroid/graphics/Paint;)V
 
     .line 47
+    return-void
+.end method
+
+.method protected onAttachedToWindow()V
+    .locals 1
+    invoke-super {p0}, Landroid/opengl/GLSurfaceView;->onAttachedToWindow()V
+    iget-object v0, p0, Lcom/google/oslo/ui/glow/ShaderView;->mExperimentContext:Landroid/content/Context;
+    invoke-static {p0, v0}, Lcom/google/oslo/OsloExperiments;->attach(Landroid/opengl/GLSurfaceView;Landroid/content/Context;)V
+    return-void
+.end method
+
+.method protected onDetachedFromWindow()V
+    .locals 0
+    invoke-static {p0}, Lcom/google/oslo/OsloExperiments;->detach(Landroid/opengl/GLSurfaceView;)V
+    invoke-super {p0}, Landroid/opengl/GLSurfaceView;->onDetachedFromWindow()V
+    return-void
+.end method
+
+.method public setVisibility(I)V
+    .locals 0
+    iput p1, p0, Lcom/google/oslo/ui/glow/ShaderView;->mStockVisibility:I
+    invoke-virtual {p0}, Lcom/google/oslo/ui/glow/ShaderView;->refreshExperimentVisibility()V
+    return-void
+.end method
+
+.method public refreshExperimentVisibility()V
+    .locals 1
+    iget v0, p0, Lcom/google/oslo/ui/glow/ShaderView;->mStockVisibility:I
+    invoke-static {v0}, Lcom/google/oslo/OsloExperiments;->visibility(I)I
+    move-result v0
+    invoke-super {p0, v0}, Landroid/opengl/GLSurfaceView;->setVisibility(I)V
     return-void
 .end method

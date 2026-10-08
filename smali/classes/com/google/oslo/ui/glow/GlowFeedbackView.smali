@@ -1011,6 +1011,9 @@
     .locals 2
     .param p1, "detected"    # Z
 
+    const/4 v0, -0x1
+    invoke-static {v0, p1}, Lcom/google/oslo/OsloExperiments;->gesture(IZ)V
+
     .line 247
     iget-object v0, p0, Lcom/google/oslo/ui/glow/GlowFeedbackView;->mRenderHandler:Lcom/google/oslo/ui/glow/GlowFeedbackView$RenderHandler;
 
@@ -1082,6 +1085,9 @@
 .method public onFlickRightH(Z)V
     .locals 2
     .param p1, "detected"    # Z
+
+    const/4 v0, 0x1
+    invoke-static {v0, p1}, Lcom/google/oslo/OsloExperiments;->gesture(IZ)V
 
     .line 267
     iget-object v0, p0, Lcom/google/oslo/ui/glow/GlowFeedbackView;->mRenderHandler:Lcom/google/oslo/ui/glow/GlowFeedbackView$RenderHandler;
@@ -1385,6 +1391,9 @@
     .param p1, "reachIn"    # Z
     .param p2, "dist"    # F
 
+    const/4 v0, 0x0
+    invoke-static {v0, p1}, Lcom/google/oslo/OsloExperiments;->gesture(IZ)V
+
     .line 288
     iget-object v0, p0, Lcom/google/oslo/ui/glow/GlowFeedbackView;->mGlow:Lcom/google/oslo/ui/glow/ShaderGlow;
 
@@ -1503,6 +1512,9 @@
 .method public onTapH(Z)V
     .locals 1
     .param p1, "detected"    # Z
+
+    const/4 v0, 0x0
+    invoke-static {v0, p1}, Lcom/google/oslo/OsloExperiments;->gesture(IZ)V
 
     .line 327
     iget-object v0, p0, Lcom/google/oslo/ui/glow/GlowFeedbackView;->mRenderHandler:Lcom/google/oslo/ui/glow/GlowFeedbackView$RenderHandler;
