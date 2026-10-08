@@ -391,6 +391,23 @@
     .locals 6
     .param p0, "color"    # I
 
+    # Air DJ mode colors override tint only while both switches are on.
+    const-string v0, "aware_air_dj"
+    const/4 v1, 0x0
+    invoke-static {v0, v1}, Lcom/google/oslo/OsloTweaks;->getInt(Ljava/lang/String;I)I
+    move-result v0
+    if-eqz v0, :normal_tint
+    const-string v0, "aware_enabled"
+    invoke-static {v0, v1}, Lcom/google/oslo/OsloTweaks;->getInt(Ljava/lang/String;I)I
+    move-result v0
+    if-eqz v0, :normal_tint
+    const-string v0, "aware_air_dj_mode"
+    invoke-static {v0, v1}, Lcom/google/oslo/OsloTweaks;->getInt(Ljava/lang/String;I)I
+    move-result v0
+    invoke-static {v0}, Lcom/google/oslo/AirDjPolicy;->glowHue(I)F
+    move-result v0
+    goto :have_hue
+    :normal_tint
     const-string v0, "aware_glow_custom"
 
     const/4 v1, 0x1
@@ -561,6 +578,21 @@
     invoke-direct {v1, v2}, Lcom/google/oslo/OsloTweaks$GlowObserver;-><init>(Landroid/os/Handler;)V
 
     const/4 v3, 0x0
+
+    const-string v2, "aware_enabled"
+    invoke-static {v2}, Landroid/provider/Settings$Secure;->getUriFor(Ljava/lang/String;)Landroid/net/Uri;
+    move-result-object v2
+    invoke-virtual {v0, v2, v3, v1}, Landroid/content/ContentResolver;->registerContentObserver(Landroid/net/Uri;ZLandroid/database/ContentObserver;)V
+
+    const-string v2, "aware_air_dj"
+    invoke-static {v2}, Landroid/provider/Settings$Secure;->getUriFor(Ljava/lang/String;)Landroid/net/Uri;
+    move-result-object v2
+    invoke-virtual {v0, v2, v3, v1}, Landroid/content/ContentResolver;->registerContentObserver(Landroid/net/Uri;ZLandroid/database/ContentObserver;)V
+
+    const-string v2, "aware_air_dj_mode"
+    invoke-static {v2}, Landroid/provider/Settings$Secure;->getUriFor(Ljava/lang/String;)Landroid/net/Uri;
+    move-result-object v2
+    invoke-virtual {v0, v2, v3, v1}, Landroid/content/ContentResolver;->registerContentObserver(Landroid/net/Uri;ZLandroid/database/ContentObserver;)V
 
     const-string v2, "aware_glow_custom"
 

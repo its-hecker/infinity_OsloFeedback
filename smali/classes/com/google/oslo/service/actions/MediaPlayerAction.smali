@@ -199,6 +199,17 @@
 
     invoke-static {v2, v1, v0}, Landroid/provider/DeviceConfig;->addOnPropertiesChangedListener(Ljava/lang/String;Ljava/util/concurrent/Executor;Landroid/provider/DeviceConfig$OnPropertiesChangedListener;)V
 
+    # Watch the opt-in flag even when skip/tap were already enabled.
+    new-instance v1, Lcom/google/oslo/service/actions/MediaPlayerAction$AirDjObserver;
+    invoke-direct {v1, p0, p1}, Lcom/google/oslo/service/actions/MediaPlayerAction$AirDjObserver;-><init>(Lcom/google/oslo/service/actions/MediaPlayerAction;Landroid/content/Context;)V
+    invoke-virtual {p1}, Landroid/content/Context;->getContentResolver()Landroid/content/ContentResolver;
+    move-result-object v2
+    const-string v3, "aware_air_dj"
+    invoke-static {v3}, Landroid/provider/Settings$Secure;->getUriFor(Ljava/lang/String;)Landroid/net/Uri;
+    move-result-object v3
+    const/4 v4, 0x0
+    invoke-virtual {v2, v3, v4, v1}, Landroid/content/ContentResolver;->registerContentObserver(Landroid/net/Uri;ZLandroid/database/ContentObserver;)V
+
     .line 200
     return-void
 .end method
@@ -944,4 +955,34 @@
     .line 120
     :cond_7
     return-void
+.end method
+
+# Recheck media rules at dispatch time, so settings changes cannot leave a stale target.
+.method protected getAirDjSessions()Ljava/util/List;
+    .locals 6
+    new-instance v0, Ljava/util/ArrayList;
+    invoke-direct {v0}, Ljava/util/ArrayList;-><init>()V
+    iget-object v1, p0, Lcom/google/oslo/service/actions/MediaPlayerAction;->mRegisteredSessions:Ljava/util/List;
+    invoke-interface {v1}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    move-result-object v1
+    :loop
+    invoke-interface {v1}, Ljava/util/Iterator;->hasNext()Z
+    move-result v2
+    if-eqz v2, :done
+    invoke-interface {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    move-result-object v2
+    check-cast v2, Lcom/google/oslo/service/actions/MediaPlayerAction$OsloMediaController;
+    iget-object v2, v2, Lcom/google/oslo/service/actions/MediaPlayerAction$OsloMediaController;->mMediaController:Landroid/media/session/MediaController;
+    invoke-virtual {v2}, Landroid/media/session/MediaController;->getPackageName()Ljava/lang/String;
+    move-result-object v3
+    invoke-virtual {p0, v3}, Lcom/google/oslo/service/actions/MediaPlayerAction;->isSupportedApp(Ljava/lang/String;)Z
+    move-result v3
+    if-eqz v3, :loop
+    invoke-virtual {p0, v2}, Lcom/google/oslo/service/actions/MediaPlayerAction;->isVideoFromUnlistedApp(Landroid/media/session/MediaController;)Z
+    move-result v3
+    if-nez v3, :loop
+    invoke-interface {v0, v2}, Ljava/util/List;->add(Ljava/lang/Object;)Z
+    goto :loop
+    :done
+    return-object v0
 .end method

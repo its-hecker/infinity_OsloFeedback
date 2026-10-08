@@ -1063,6 +1063,14 @@
     .param p1, "appPackageName"    # Ljava/lang/String;
     .param p2, "actions"    # J
 
+    invoke-virtual {p0}, Lcom/google/oslo/service/actions/PlayPauseMediaTrack;->getContext()Landroid/content/Context;
+    move-result-object v0
+    invoke-static {v0}, Lcom/google/oslo/AirDjController;->isEnabled(Landroid/content/Context;)Z
+    move-result v0
+    if-eqz v0, :stock_support
+    const/4 v0, 0x1
+    return v0
+    :stock_support
     .line 241
     const-wide/16 v0, 0x2e06
 
@@ -1131,6 +1139,24 @@
 
     .line 376
     :cond_0
+    invoke-virtual {p0}, Lcom/google/oslo/service/actions/PlayPauseMediaTrack;->getContext()Landroid/content/Context;
+    move-result-object v1
+    invoke-virtual {p0}, Lcom/google/oslo/service/actions/PlayPauseMediaTrack;->getAirDjSessions()Ljava/util/List;
+    move-result-object v2
+    invoke-virtual {v0}, Lcom/google/oslo/service/serviceinterface/output/OsloTapOutput;->getDetected()Z
+    move-result v3
+    invoke-static {v1, v2, v3}, Lcom/google/oslo/AirDjController;->handleTap(Landroid/content/Context;Ljava/util/List;Z)Z
+    move-result v1
+    if-eqz v1, :stock_tap
+    invoke-static {}, Lcom/google/oslo/AirDjController;->getLastActionPackage()Ljava/lang/String;
+    move-result-object v1
+    if-eqz v1, :air_dj_tap_done
+    iget-object v2, p0, Lcom/google/oslo/service/actions/PlayPauseMediaTrack;->mStatusSensor:Lcom/google/oslo/service/sensors/StatusSensor;
+    invoke-virtual {v2, v0, v1}, Lcom/google/oslo/service/sensors/StatusSensor;->reportGestureDetectedEvent(Lcom/google/oslo/service/serviceinterface/output/OsloTapOutput;Ljava/lang/String;)V
+    invoke-virtual {p0}, Lcom/google/oslo/service/actions/PlayPauseMediaTrack;->fakeTouchEvent()V
+    :air_dj_tap_done
+    return-void
+    :stock_tap
     invoke-direct {p0, v0}, Lcom/google/oslo/service/actions/PlayPauseMediaTrack;->playPause(Lcom/google/oslo/service/serviceinterface/output/OsloTapOutput;)V
 
     .line 377

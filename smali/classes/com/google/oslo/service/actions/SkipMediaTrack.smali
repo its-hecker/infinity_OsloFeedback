@@ -39,6 +39,23 @@
     .param p1, "next"    # Z
     .param p2, "flickOutput"    # Lcom/google/oslo/service/serviceinterface/output/OsloFlickOutput;
 
+    # Consume Air DJ gestures before the original skip loop; one target only.
+    invoke-virtual {p0}, Lcom/google/oslo/service/actions/SkipMediaTrack;->getContext()Landroid/content/Context;
+    move-result-object v0
+    invoke-virtual {p0}, Lcom/google/oslo/service/actions/SkipMediaTrack;->getAirDjSessions()Ljava/util/List;
+    move-result-object v1
+    invoke-static {v0, v1, p1}, Lcom/google/oslo/AirDjController;->handleFlick(Landroid/content/Context;Ljava/util/List;Z)Z
+    move-result v0
+    if-eqz v0, :stock_advance
+    invoke-static {}, Lcom/google/oslo/AirDjController;->getLastActionPackage()Ljava/lang/String;
+    move-result-object v0
+    if-eqz v0, :air_dj_done
+    iget-object v1, p0, Lcom/google/oslo/service/actions/SkipMediaTrack;->mStatusSensor:Lcom/google/oslo/service/sensors/StatusSensor;
+    invoke-virtual {v1, p2, v0}, Lcom/google/oslo/service/sensors/StatusSensor;->reportGestureDetectedEvent(Lcom/google/oslo/service/serviceinterface/output/OsloFlickOutput;Ljava/lang/String;)V
+    invoke-virtual {p0}, Lcom/google/oslo/service/actions/SkipMediaTrack;->fakeTouchEvent()V
+    :air_dj_done
+    return-void
+    :stock_advance
     .line 106
     iget-object v0, p0, Lcom/google/oslo/service/actions/SkipMediaTrack;->mRegisteredSessions:Ljava/util/List;
 
@@ -320,6 +337,14 @@
     .param p1, "appPackageName"    # Ljava/lang/String;
     .param p2, "actions"    # J
 
+    invoke-virtual {p0}, Lcom/google/oslo/service/actions/SkipMediaTrack;->getContext()Landroid/content/Context;
+    move-result-object v0
+    invoke-static {v0}, Lcom/google/oslo/AirDjController;->isEnabled(Landroid/content/Context;)Z
+    move-result v0
+    if-eqz v0, :stock_support
+    const/4 v0, 0x1
+    return v0
+    :stock_support
     # Stock only checked skip support for iHeartRadio, because every other
     # whitelisted app supports it. With any app allowed, check it for all.
     invoke-static {p1}, Landroid/text/TextUtils;->isEmpty(Ljava/lang/CharSequence;)Z
