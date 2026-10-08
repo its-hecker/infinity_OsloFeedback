@@ -14,9 +14,13 @@
 .end method
 
 .method public onChange(Z)V
-    .locals 1
+    .locals 2
     iget-object v0, p0, Lcom/google/oslo/service/actions/MediaPlayerAction$AirDjObserver;->mAction:Lcom/google/oslo/service/actions/MediaPlayerAction;
-    invoke-virtual {v0}, Lcom/google/oslo/service/actions/MediaPlayerAction;->scanActiveMediaSessions()V
     invoke-virtual {v0}, Lcom/google/oslo/service/actions/MediaPlayerAction;->updateActionDetectorRegistration()V
+    invoke-virtual {v0}, Lcom/google/oslo/service/actions/MediaPlayerAction;->isActionDetectorRegistered()Z
+    move-result v1
+    if-eqz v1, :done
+    invoke-virtual {v0}, Lcom/google/oslo/service/actions/MediaPlayerAction;->scanActiveMediaSessions()V
+    :done
     return-void
 .end method
