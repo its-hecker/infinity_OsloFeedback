@@ -29,7 +29,7 @@ public final class OsloExperiments {
     private static ContentObserver observer;
     private static boolean service;
     static volatile int savedStyle, savedSpeed = 100, brightness = 100, airMode;
-    static volatile boolean trails, enabled, shown = true, airDj, albumGlow;
+    static volatile boolean trails, enabled, shown = true, airDj;
     static volatile long gestureAt;
     static volatile int direction;
     private static boolean pumping;
@@ -69,8 +69,6 @@ public final class OsloExperiments {
                 context.getContentResolver().registerContentObserver(
                         Settings.Secure.getUriFor(key), false, observer);
             }
-            context.getContentResolver().registerContentObserver(
-                    Settings.Secure.getUriFor("aware_album_art_glow"),false,observer);
             for (String key : new String[] {"aware_allowed", "airplane_mode_on", "low_power"}) {
                 context.getContentResolver().registerContentObserver(
                         Settings.Global.getUriFor(key), false, observer);
@@ -97,9 +95,7 @@ public final class OsloExperiments {
             brightness = Math.max(10, Math.min(100, setting("aware_glow_brightness", 100)));
             airDj = setting("aware_air_dj", 0) == 1;
             airMode = AirDjPolicy.normalizeMode(setting("aware_air_dj_mode", 0));
-            albumGlow = setting("aware_album_art_glow",0)==1;
         } catch (RuntimeException e) { enabled = false; }
-        updateAlbumMonitor();
         startFrames();
     }
     public static void serviceStarted(Context owner) {
@@ -113,19 +109,16 @@ public final class OsloExperiments {
             initializeMain(owner);
             for (WeakReference<GLSurfaceView> ref : VIEWS) if (ref.get() == view) return;
             VIEWS.add(new WeakReference<>(view));
-            updateAlbumMonitor();
             startFrames();
         });
     }
     public static void detach(GLSurfaceView view) {
         MAIN.post(() -> {
             VIEWS.removeIf(ref -> ref.get() == null || ref.get() == view);
-            updateAlbumMonitor();
             if (!service && VIEWS.isEmpty()) close();
         });
     }
     private static void close() {
-        if (context != null) AlbumArtController.configure(context,false,OsloExperiments::colorsChanged);
         if (context != null && receiver != null) try { context.unregisterReceiver(receiver); }
         catch (RuntimeException ignored) {}
         if (context != null && observer != null) try {
@@ -133,17 +126,6 @@ public final class OsloExperiments {
         } catch (RuntimeException ignored) {}
         receiver = null; observer = null; context = null;
         enabled = false;
-    }
-    private static void updateAlbumMonitor() {
-        if (context != null) AlbumArtController.configure(context,
-                enabled && shown && albumGlow && !VIEWS.isEmpty(),OsloExperiments::colorsChanged);
-    }
-    private static void colorsChanged() {
-        for (WeakReference<GLSurfaceView> ref : VIEWS) {
-            GLSurfaceView view=ref.get();
-            if (view instanceof Surface) ((Surface)view).refreshExperimentColors();
-            if (view != null) view.requestRender();
-        }
     }
     /** Called before stock media routing. Lease expiry handles crashes and missed onPause. */
     public static boolean isLabActive() {
@@ -189,3 +171,4 @@ public final class OsloExperiments {
         }
     };
 }
+

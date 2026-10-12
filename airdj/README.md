@@ -75,61 +75,21 @@ Logs use the `Oslo.AirDJ` tag. Native ROM/GoogleParts compilation and on-device
 testing cannot be replaced by the standalone plugin workflow.
 
 
-## Motion Lab additions
+## Motion Sense settings
 
-GoogleParts exposes Touchless Game Arcade (Air Dodge / Target Rush), Gesture Training
-Room, Air Control Panel, and Glow Theme Studio on `features-experimental`. The first
-three bind Oslo's existing gesture service while resumed, subscribe to detected
-flick/tap/reach events and deduplicate regular/echo callbacks. No new continuous
-hand-position sensor is assumed. A foreground heartbeat renews a six-second,
-permission-protected lease that suppresses built-in media actions while the lab is
-open. Pausing the page unregisters listeners and ends the lease; expiry handles a
-missed cleanup. Alarm/call actions keep their stock behavior.
+Glow Light contains Show glow light, brightness, size, Rainbow, Match system
+accent, and the single entry to Glow Theme Studio. The Studio saves the glow
+style, animation speed and Gesture Trails, and offers an eight-second temporary
+preview. Its entry is under Glow Light.
 
-Glow presets (Stock / Neon / Aurora / Pixel / Minimal), animation speed (50–200%)
-and directional Gesture Trails are opt-in Secure settings. The extra GLES pass
-uses the existing Oslo surface and redraws at most for the 1.2-second feedback or
-eight-second preview window. It restores the stock program, vertex buffer and
-visibility. Surface recreation resets its GL program. Preview commands carry a
-unique token and draft values in memory; they never write the saved theme. A stale
-page's cleanup cannot stop a newer page's session.
+Motion Lab contains the Gesture Training Room. It uses real reach, left/right
+swipe and air-tap detector events for a guided lesson with immediate feedback.
+Gesture transport and foreground leases are cleaned up when the page closes.
 
-The control panel targets one active media session and checks supported controls;
-Play / pause can resume a paused session. Flashlight permission is requested on
-use. The torch keeps the state selected by the user when the panel closes, while
-radar subscriptions stop. Default stock settings and the Air DJ switch are kept.
+The plugin no longer reads the former album artwork or night dimming settings.
+Existing saved values therefore cannot reactivate those effects.
 
-Checks cover policy expiry/token isolation, game/lesson rules, existing Air DJ
-controller tests, public Android API compilation, AAPT resource linking, GLES
-shader rendering, DEX rebuilding, alignment and validation signing. These do not
-replace a full Android 17 ROM build and real Pixel 4 XL Soli/UI testing.
-
-## Album Art Glow and animated settings
-
-Album Art Glow is off by default (`aware_album_art_glow=0`). Its switch is under
-Motion Sense → Glow light, with an illustrated detail page in Motion Lab. The
-controller observes active media sessions only while enabled, Motion Sense is
-available, glow is shown and a native glow surface is attached. It uses the first
-playing session, reading `ART` then `ALBUM_ART` bitmap metadata. It never downloads
-artwork, sends media commands or changes saved custom/accent/rainbow settings.
-
-Artwork is sampled off the UI thread into at most 48 × 48 pixels. Transparent and
-near-black borders are ignored; a weighted color histogram selects a bright tint.
-Pause, stop, missing/recycled artwork and disabling the feature clear the palette
-and restore the saved tint. Generation checks discard results from a previous
-track or a disabled monitor. Player-owned bitmaps are never recycled. Air DJ mode
-colors keep priority over artwork and preset palette colors. Neon and Aurora
-follow the album hue when artwork tint is active.
-
-GoogleParts includes nine original vector Lottie illustrations for Air DJ, the
-Motion Lab overview, Arcade, Training, Control Panel, Glow Studio, Gesture Trails,
-temporary Preview and Album Art Glow. They use the existing illustration color
-tags, theme colors and saved glow tint. The album illustration uses example
-covers. Native lab illustrations pause off screen and respect disabled system
-animations. The old stable illustration assets are unchanged.
-
-Additional checks cover palette extraction, media callbacks, session removal,
-bitmap ownership, bounded sampling, stale worker results, opt-out cleanup, actual
-Android/Lottie APIs and artwork colors across all five GLES styles. On-device
-checks should include artwork changes, paused playback, no-art players, Air DJ
-priority, switching the toggle and light/dark/reduced-motion settings pages.
+GoogleParts includes six original vector Lottie illustrations: Air DJ, the
+Motion Lab lesson overview, Training, Glow Studio, Gesture Trails and Preview.
+They use the existing theme and saved glow tint tags and respect disabled
+system animations.

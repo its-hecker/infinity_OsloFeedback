@@ -6,7 +6,7 @@ import zipfile
 
 required = {b'Lcom/google/oslo/' + name + b';' for name in (
     b'AirDjController', b'AirDjPolicy', b'OsloExperiments', b'OsloExperiments$Surface',
-    b'ExperimentPolicy', b'LabGlowRenderer', b'AlbumArtController', b'ArtworkPalette')}
+    b'ExperimentPolicy', b'LabGlowRenderer')}
 owners = {}
 with zipfile.ZipFile(sys.argv[1]) as apk:
     dexes = [n for n in apk.namelist() if n.startswith('classes') and n.endswith('.dex')]
@@ -14,6 +14,8 @@ with zipfile.ZipFile(sys.argv[1]) as apk:
     for name in dexes:
         data = apk.read(name)
         assert data.startswith(b'dex\n'), name
+        assert b'aware_album_art_glow' not in data, 'Removed artwork setting is still consumed'
+        assert b'aware_glow_night' not in data, 'Removed night dimming is still consumed'
         def word(offset):
             return struct.unpack_from('<I', data, offset)[0]
         strings, types, count, classes = word(60), word(68), word(96), word(100)
@@ -27,5 +29,8 @@ with zipfile.ZipFile(sys.argv[1]) as apk:
             descriptor = data[start:data.index(b'\0', start)]
             assert descriptor not in owners, f'Duplicate {descriptor!r}: {owners.get(descriptor)}, {name}'
             owners[descriptor] = name
+assert not any(name.startswith((b'Lcom/google/oslo/AlbumArtController',
+        b'Lcom/google/oslo/ArtworkPalette')) for name in owners), 'Removed artwork helpers remain'
 assert required <= owners.keys(), f'Missing helpers: {required - owners.keys()}'
 print(f'Packaged plugin: {len(dexes)} DEX files, {len(owners)} classes, zero duplicate definitions; all feature helpers present')
+

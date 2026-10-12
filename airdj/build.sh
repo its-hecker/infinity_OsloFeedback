@@ -16,12 +16,7 @@ java com.sun.tools.javac.Main -d "$AIR_DJ_WORK/tests" \
     "$AIR_DJ_ROOT/airdj/src/com/google/oslo/ExperimentPolicy.java" \
     "$AIR_DJ_ROOT/airdj/tests/com/google/oslo/ExperimentPolicyTest.java"
 java -cp "$AIR_DJ_WORK/tests" com.google.oslo.ExperimentPolicyTest
-java com.sun.tools.javac.Main -d "$AIR_DJ_WORK/tests" \
-    "$AIR_DJ_ROOT/airdj/src/com/google/oslo/ArtworkPalette.java" \
-    "$AIR_DJ_ROOT/airdj/tests/com/google/oslo/ArtworkPaletteTest.java"
-java -cp "$AIR_DJ_WORK/tests" com.google.oslo.ArtworkPaletteTest
 python3 "$AIR_DJ_ROOT/airdj/tests/test_controller.py"
-python3 "$AIR_DJ_ROOT/airdj/tests/test_album_controller.py"
 java com.sun.tools.javac.Main -source 8 -target 8 -classpath "$ANDROID_JAR" \
     -d "$AIR_DJ_WORK/classes" "$AIR_DJ_ROOT"/airdj/src/com/google/oslo/*.java
 java -cp "$R8_JAR" com.android.tools.r8.D8 --min-api 29 --lib "$ANDROID_JAR" \
@@ -40,3 +35,4 @@ PY
 java -cp "$APK_EDITOR_JAR" org.jf.baksmali.Main disassemble \
     "$AIR_DJ_WORK/dex/classes.dex" -o "$AIR_DJ_ROOT/smali/classes2"
 java -jar "$APK_EDITOR_JAR" b -no-cache -i "$AIR_DJ_ROOT" -o "$AIR_DJ_OUTPUT"
+

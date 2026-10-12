@@ -130,12 +130,6 @@
 
     div-float/2addr v0, v1
 
-    invoke-static {}, Lcom/google/oslo/OsloTweaks;->nightDimFactor()F
-
-    move-result v1
-
-    mul-float/2addr v0, v1
-
     return v0
 .end method
 
@@ -210,63 +204,6 @@
     const/4 v0, 0x0
 
     aget v0, v1, v0
-
-    return v0
-.end method
-
-# Night-dim multiplier: 0.4 inside the night window (aware_glow_night_start..6)
-# when aware_glow_night is on, otherwise 1.0.
-.method public static nightDimFactor()F
-    .locals 3
-
-    const-string v0, "aware_glow_night"
-
-    const/4 v1, 0x0
-
-    invoke-static {v0, v1}, Lcom/google/oslo/OsloTweaks;->getInt(Ljava/lang/String;I)I
-
-    move-result v0
-
-    if-eqz v0, :not_dim
-
-    invoke-static {}, Ljava/time/LocalTime;->now()Ljava/time/LocalTime;
-
-    move-result-object v0
-
-    invoke-virtual {v0}, Ljava/time/LocalTime;->getHour()I
-
-    move-result v0
-
-    const-string v1, "aware_glow_night_start"
-
-    const/16 v2, 0x16
-
-    invoke-static {v1, v2}, Lcom/google/oslo/OsloTweaks;->getInt(Ljava/lang/String;I)I
-
-    move-result v1
-
-    const/4 v2, 0x6
-
-    if-lt v1, v2, :non_wrap
-
-    if-ge v0, v1, :dim
-
-    if-lt v0, v2, :dim
-
-    goto :not_dim
-
-    :non_wrap
-    if-lt v0, v1, :not_dim
-
-    if-ge v0, v2, :not_dim
-
-    :dim
-    const v0, 0x3ecccccd    # 0.4f
-
-    return v0
-
-    :not_dim
-    const/high16 v0, 0x3f800000    # 1.0f
 
     return v0
 .end method
@@ -408,13 +345,6 @@
     move-result v0
     goto :have_hue
     :normal_tint
-    invoke-static {}, Lcom/google/oslo/AlbumArtController;->getColor()I
-    move-result v0
-    if-eqz v0, :saved_tint
-    invoke-static {p0}, Lcom/google/oslo/AlbumArtController;->tint(I)I
-    move-result v0
-    return v0
-    :saved_tint
     const-string v0, "aware_glow_custom"
 
     const/4 v1, 0x1
@@ -657,22 +587,6 @@
 
     invoke-virtual {v0, v2, v3, v1}, Landroid/content/ContentResolver;->registerContentObserver(Landroid/net/Uri;ZLandroid/database/ContentObserver;)V
 
-    const-string v2, "aware_glow_night"
-
-    invoke-static {v2}, Landroid/provider/Settings$Secure;->getUriFor(Ljava/lang/String;)Landroid/net/Uri;
-
-    move-result-object v2
-
-    invoke-virtual {v0, v2, v3, v1}, Landroid/content/ContentResolver;->registerContentObserver(Landroid/net/Uri;ZLandroid/database/ContentObserver;)V
-
-    const-string v2, "aware_glow_night_start"
-
-    invoke-static {v2}, Landroid/provider/Settings$Secure;->getUriFor(Ljava/lang/String;)Landroid/net/Uri;
-
-    move-result-object v2
-
-    invoke-virtual {v0, v2, v3, v1}, Landroid/content/ContentResolver;->registerContentObserver(Landroid/net/Uri;ZLandroid/database/ContentObserver;)V
-
     const/4 v0, 0x1
 
     sput-boolean v0, Lcom/google/oslo/OsloTweaks;->sGlowObserverRegistered:Z
@@ -742,3 +656,4 @@
     :done
     return-void
 .end method
+
