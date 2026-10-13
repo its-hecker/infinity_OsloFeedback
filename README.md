@@ -1,8 +1,13 @@
 # Motion Sense on Android 17: Porting Guide
 
-_Last updated: October 4, 2026_
+_Last updated: October 13, 2026_
 
 Motion Sense (Soli radar, codename Oslo) runs on Android 17 on the Pixel 4 XL (coral) with Google's Android 13 OsloFeedback APK, four small smali patches and a handful of device-tree changes. This guide lists every piece, in the order to add them, as done for Project Infinity X 17 (based on LineageOS 24.0).
+
+The default branch is `cnb-Latest-stable`, promoted from the tested
+`features-experimental` branch. It includes the Motion Lab and Air DJ additions;
+[airdj/README.md](airdj/README.md) describes their settings and build process.
+The porting steps below describe the base Android 17 integration.
 
 ## How it works
 
@@ -17,7 +22,7 @@ You need a working Android 17 ROM for coral or flame that already boots on the s
 | Item | Where to get it | Notes |
 | --- | --- | --- |
 | Device and vendor trees | Your ROM's coral trees (LineageOS 24.0 based) | Must use the final stock vendor, TP1A.221005.002.B2 |
-| OsloFeedback source (smali) | [its-hecker/infinity_OsloFeedback](https://github.com/its-hecker/infinity_OsloFeedback), branch cnb | Aswin's Android 14 smali import plus the four Android 17 fixes |
+| OsloFeedback source (smali) | [its-hecker/infinity_OsloFeedback](https://github.com/its-hecker/infinity_OsloFeedback), branch `cnb-Latest-stable` | Aswin's Android 14 smali import plus the four Android 17 fixes |
 | OsloFeedback.apk and MotionSenseBridgePrebuilt.apk | Built from the repo above / [PixysOS-Devices/vendor_google_coral](https://github.com/PixysOS-Devices/vendor_google_coral) (fourteen-v3) | MotionSenseBridge is a 16 KB stub, use it unchanged |
 | APKEditor | [REAndroid/APKEditor](https://github.com/REAndroid/APKEditor) releases | Rebuilds the APK from smali |
 | Motion Sense settings page | `parts/` in [the coral device tree](https://github.com/its-hecker/infinity_cnb_android_device_google_coral) | Shown in Settings → System, no Settings fork needed |
@@ -89,7 +94,7 @@ Start from Aswin's Android 14 smali (it already handles the DarkReceiver v3 and 
 | 3 | `service/OsloGestureTrigger.smali`, `loadGesturePlugin()` | `START_RECOGNITION ERROR: Invalid sound model`: since Android 14 the detector copies the model when it is created, which Oslo does before saving it | After `updateModel()`, create a new `DetectorCallback` and detector and store it in `mGestureTriggerDetector`; drop `final` from that field |
 | 4 | `OsloOverlay$Minimizer.smali`, `addInteractionListeners()` | `NoSuchMethodError: InputManager.getInstance()` (removed in Android 14) | Call `InputManagerGlobal.getInstance()` and `InputManagerGlobal;->monitorGestureInput(String, int)` instead |
 
-The finished patches are commits on [its-hecker/infinity_OsloFeedback](https://github.com/its-hecker/infinity_OsloFeedback) (cnb), so you can cherry-pick them instead of editing by hand. Fix 1 example:
+The finished patches are commits on [its-hecker/infinity_OsloFeedback](https://github.com/its-hecker/infinity_OsloFeedback) (`cnb-Latest-stable`), so you can cherry-pick them instead of editing by hand. Fix 1 example:
 
 ```
 # before
@@ -198,7 +203,7 @@ adb shell settings put secure doze_wake_screen_gesture 1
 
 ## OsloFeedback extras
 
-On top of the four fixes, [infinity_OsloFeedback](https://github.com/its-hecker/infinity_OsloFeedback) (cnb) adds four optional features. Each one reads a `Settings.Secure` key, so it can be switched from the Motion Sense page (Step 6) or from `adb`:
+On top of the four fixes, [infinity_OsloFeedback](https://github.com/its-hecker/infinity_OsloFeedback) (`cnb-Latest-stable`) adds four optional features. Each one reads a `Settings.Secure` key, so it can be switched from the Motion Sense page (Step 6) or from `adb`:
 
 | Key | Default | What it does |
 | --- | --- | --- |

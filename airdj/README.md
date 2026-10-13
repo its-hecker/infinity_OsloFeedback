@@ -1,4 +1,4 @@
-# Air DJ (experimental)
+# Air DJ and Motion Lab
 
 Air DJ is off by default. GoogleParts exposes `aware_air_dj` and the current
 `aware_air_dj_mode` under Settings → System → Motion Sense. Enabling Air DJ turns
@@ -44,22 +44,20 @@ bash airdj/build.sh /path/OsloFeedback-AirDJ.apk
 
 This runs the policy and controller regression tests, compiles against the SDK,
 regenerates helper smali and rebuilds all DEX without using stale APKEditor caches.
-The experimental GitHub workflow additionally aligns, signs with a validation
+The GitHub workflow additionally aligns, signs with a validation
 key and verifies its artifact. That key cannot update a platform-signed plugin
 on an existing ROM. The ROM's `OsloFeedback` import must re-sign it with the
 platform key.
 
 ## ROM integration and testing
 
-Pair `features-experimental` in the coral device and vendor repositories. Both
-branches start from the current `faceid` baseline; Air DJ does not establish
-Face Unlock runtime compatibility. Stable Oslo `cnb`, device `lineage-24.0` and
-the existing `faceid` branches are independent of these feature commits.
+Use `cnb-Latest-stable` in OsloFeedback and the paired coral device and vendor
+repositories.
 
-The vendor feature workflow builds a pinned Oslo source commit, validates it and
-commits the prebuilt plugin only to `features-experimental`. A successful vendor
-workflow is required before syncing/building that branch. Update its source pin
-when taking subsequent Oslo feature changes.
+The vendor Motion Lab workflow builds a pinned Oslo source commit, validates it
+and commits the prebuilt plugin to `cnb-Latest-stable`. A successful vendor
+workflow is required before syncing and building. Update its source pin when
+taking subsequent Oslo implementation changes.
 
 Hardware checks still needed:
 

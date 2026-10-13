@@ -1,7 +1,7 @@
-name: Build experimental Motion Lab
+name: Build Motion Lab
 on:
   push:
-    branches: [features-experimental]
+    branches: [cnb-Latest-stable]
     paths: ['airdj/**', 'smali/**', '.github/workflows/air-dj.yml']
   workflow_dispatch:
 permissions:
