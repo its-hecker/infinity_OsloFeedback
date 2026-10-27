@@ -35,8 +35,6 @@
 
 .field static volatile airMode:I
 
-.field static volatile albumGlow:Z
-
 .field static volatile brightness:I
 
 .field private static context:Landroid/content/Context;
@@ -65,14 +63,6 @@
 
 
 # direct methods
-.method public static synthetic $r8$lambda$-jO9nmNmsC2Vvnva6YurYVMWGy0()V
-    .registers 0
-
-    invoke-static {}, Lcom/google/oslo/OsloExperiments;->colorsChanged()V
-
-    return-void
-.end method
-
 .method public static synthetic $r8$lambda$ALg0_CNZiVKSi7pnU88XDskOKOU()V
     .registers 0
 
@@ -121,7 +111,7 @@
 
     sput-boolean v0, Lcom/google/oslo/OsloExperiments;->shown:Z
 
-    .line 171
+    .line 153
     new-instance v0, Lcom/google/oslo/OsloExperiments$3;
 
     invoke-direct {v0}, Lcom/google/oslo/OsloExperiments$3;-><init>()V
@@ -188,7 +178,7 @@
 .method public static attach(Landroid/opengl/GLSurfaceView;Landroid/content/Context;)V
     .registers 4
 
-    .line 112
+    .line 108
     sget-object v0, Lcom/google/oslo/OsloExperiments;->MAIN:Landroid/os/Handler;
 
     new-instance v1, Lcom/google/oslo/OsloExperiments$$ExternalSyntheticLambda4;
@@ -197,91 +187,75 @@
 
     invoke-virtual {v0, v1}, Landroid/os/Handler;->post(Ljava/lang/Runnable;)Z
 
-    .line 119
+    .line 114
     return-void
 .end method
 
 .method private static close()V
-    .registers 3
+    .registers 2
 
-    .line 128
+    .line 122
     sget-object v0, Lcom/google/oslo/OsloExperiments;->context:Landroid/content/Context;
 
-    const/4 v1, 0x0
-
-    if-eqz v0, :cond_f
-
-    sget-object v0, Lcom/google/oslo/OsloExperiments;->context:Landroid/content/Context;
-
-    new-instance v2, Lcom/google/oslo/OsloExperiments$$ExternalSyntheticLambda5;
-
-    invoke-direct {v2}, Lcom/google/oslo/OsloExperiments$$ExternalSyntheticLambda5;-><init>()V
-
-    invoke-static {v0, v1, v2}, Lcom/google/oslo/AlbumArtController;->configure(Landroid/content/Context;ZLjava/lang/Runnable;)V
-
-    .line 129
-    :cond_f
-    sget-object v0, Lcom/google/oslo/OsloExperiments;->context:Landroid/content/Context;
-
-    if-eqz v0, :cond_21
+    if-eqz v0, :cond_12
 
     sget-object v0, Lcom/google/oslo/OsloExperiments;->receiver:Landroid/content/BroadcastReceiver;
 
-    if-eqz v0, :cond_21
+    if-eqz v0, :cond_12
 
-    :try_start_17
+    :try_start_8
     sget-object v0, Lcom/google/oslo/OsloExperiments;->context:Landroid/content/Context;
 
-    sget-object v2, Lcom/google/oslo/OsloExperiments;->receiver:Landroid/content/BroadcastReceiver;
+    sget-object v1, Lcom/google/oslo/OsloExperiments;->receiver:Landroid/content/BroadcastReceiver;
 
-    invoke-virtual {v0, v2}, Landroid/content/Context;->unregisterReceiver(Landroid/content/BroadcastReceiver;)V
-    :try_end_1e
-    .catch Ljava/lang/RuntimeException; {:try_start_17 .. :try_end_1e} :catch_1f
+    invoke-virtual {v0, v1}, Landroid/content/Context;->unregisterReceiver(Landroid/content/BroadcastReceiver;)V
+    :try_end_f
+    .catch Ljava/lang/RuntimeException; {:try_start_8 .. :try_end_f} :catch_10
 
-    goto :goto_20
+    goto :goto_11
 
-    .line 130
-    :catch_1f
+    .line 123
+    :catch_10
     move-exception v0
 
-    :goto_20
+    :goto_11
     nop
 
-    .line 131
-    :cond_21
+    .line 124
+    :cond_12
     sget-object v0, Lcom/google/oslo/OsloExperiments;->context:Landroid/content/Context;
 
-    if-eqz v0, :cond_37
+    if-eqz v0, :cond_28
 
     sget-object v0, Lcom/google/oslo/OsloExperiments;->observer:Landroid/database/ContentObserver;
 
-    if-eqz v0, :cond_37
+    if-eqz v0, :cond_28
 
-    .line 132
-    :try_start_29
+    .line 125
+    :try_start_1a
     sget-object v0, Lcom/google/oslo/OsloExperiments;->context:Landroid/content/Context;
 
     invoke-virtual {v0}, Landroid/content/Context;->getContentResolver()Landroid/content/ContentResolver;
 
     move-result-object v0
 
-    sget-object v2, Lcom/google/oslo/OsloExperiments;->observer:Landroid/database/ContentObserver;
+    sget-object v1, Lcom/google/oslo/OsloExperiments;->observer:Landroid/database/ContentObserver;
 
-    invoke-virtual {v0, v2}, Landroid/content/ContentResolver;->unregisterContentObserver(Landroid/database/ContentObserver;)V
-    :try_end_34
-    .catch Ljava/lang/RuntimeException; {:try_start_29 .. :try_end_34} :catch_35
+    invoke-virtual {v0, v1}, Landroid/content/ContentResolver;->unregisterContentObserver(Landroid/database/ContentObserver;)V
+    :try_end_25
+    .catch Ljava/lang/RuntimeException; {:try_start_1a .. :try_end_25} :catch_26
 
-    goto :goto_36
+    goto :goto_27
 
-    .line 133
-    :catch_35
+    .line 126
+    :catch_26
     move-exception v0
 
-    :goto_36
+    :goto_27
     nop
 
-    .line 134
-    :cond_37
+    .line 127
+    :cond_28
     const/4 v0, 0x0
 
     sput-object v0, Lcom/google/oslo/OsloExperiments;->receiver:Landroid/content/BroadcastReceiver;
@@ -290,94 +264,40 @@
 
     sput-object v0, Lcom/google/oslo/OsloExperiments;->context:Landroid/content/Context;
 
-    .line 135
-    sput-boolean v1, Lcom/google/oslo/OsloExperiments;->enabled:Z
+    .line 128
+    const/4 v0, 0x0
 
-    .line 136
-    return-void
-.end method
+    sput-boolean v0, Lcom/google/oslo/OsloExperiments;->enabled:Z
 
-.method private static colorsChanged()V
-    .registers 3
-
-    .line 142
-    sget-object v0, Lcom/google/oslo/OsloExperiments;->VIEWS:Ljava/util/ArrayList;
-
-    invoke-virtual {v0}, Ljava/util/ArrayList;->iterator()Ljava/util/Iterator;
-
-    move-result-object v0
-
-    :goto_6
-    invoke-interface {v0}, Ljava/util/Iterator;->hasNext()Z
-
-    move-result v1
-
-    if-eqz v1, :cond_28
-
-    invoke-interface {v0}, Ljava/util/Iterator;->next()Ljava/lang/Object;
-
-    move-result-object v1
-
-    check-cast v1, Ljava/lang/ref/WeakReference;
-
-    .line 143
-    invoke-virtual {v1}, Ljava/lang/ref/WeakReference;->get()Ljava/lang/Object;
-
-    move-result-object v1
-
-    check-cast v1, Landroid/opengl/GLSurfaceView;
-
-    .line 144
-    instance-of v2, v1, Lcom/google/oslo/OsloExperiments$Surface;
-
-    if-eqz v2, :cond_22
-
-    move-object v2, v1
-
-    check-cast v2, Lcom/google/oslo/OsloExperiments$Surface;
-
-    invoke-interface {v2}, Lcom/google/oslo/OsloExperiments$Surface;->refreshExperimentColors()V
-
-    .line 145
-    :cond_22
-    if-eqz v1, :cond_27
-
-    invoke-virtual {v1}, Landroid/opengl/GLSurfaceView;->requestRender()V
-
-    .line 146
-    :cond_27
-    goto :goto_6
-
-    .line 147
-    :cond_28
+    .line 129
     return-void
 .end method
 
 .method public static detach(Landroid/opengl/GLSurfaceView;)V
     .registers 3
 
-    .line 121
+    .line 116
     sget-object v0, Lcom/google/oslo/OsloExperiments;->MAIN:Landroid/os/Handler;
 
-    new-instance v1, Lcom/google/oslo/OsloExperiments$$ExternalSyntheticLambda7;
+    new-instance v1, Lcom/google/oslo/OsloExperiments$$ExternalSyntheticLambda6;
 
-    invoke-direct {v1, p0}, Lcom/google/oslo/OsloExperiments$$ExternalSyntheticLambda7;-><init>(Landroid/opengl/GLSurfaceView;)V
+    invoke-direct {v1, p0}, Lcom/google/oslo/OsloExperiments$$ExternalSyntheticLambda6;-><init>(Landroid/opengl/GLSurfaceView;)V
 
     invoke-virtual {v0, v1}, Landroid/os/Handler;->post(Ljava/lang/Runnable;)Z
 
-    .line 126
+    .line 120
     return-void
 .end method
 
 .method public static gesture(IZ)V
     .registers 4
 
-    .line 161
+    .line 143
     if-nez p1, :cond_3
 
     return-void
 
-    .line 162
+    .line 144
     :cond_3
     invoke-static {}, Landroid/os/SystemClock;->elapsedRealtime()J
 
@@ -385,10 +305,10 @@
 
     sput-wide v0, Lcom/google/oslo/OsloExperiments;->gestureAt:J
 
-    .line 163
+    .line 145
     sput p0, Lcom/google/oslo/OsloExperiments;->direction:I
 
-    .line 164
+    .line 146
     sget-object p0, Lcom/google/oslo/OsloExperiments;->MAIN:Landroid/os/Handler;
 
     new-instance p1, Lcom/google/oslo/OsloExperiments$$ExternalSyntheticLambda1;
@@ -397,7 +317,7 @@
 
     invoke-virtual {p0, p1}, Landroid/os/Handler;->post(Ljava/lang/Runnable;)Z
 
-    .line 165
+    .line 147
     return-void
 .end method
 
@@ -527,25 +447,6 @@
 
     .line 72
     :cond_5c
-    sget-object p0, Lcom/google/oslo/OsloExperiments;->context:Landroid/content/Context;
-
-    invoke-virtual {p0}, Landroid/content/Context;->getContentResolver()Landroid/content/ContentResolver;
-
-    move-result-object p0
-
-    const-string v1, "aware_album_art_glow"
-
-    .line 73
-    invoke-static {v1}, Landroid/provider/Settings$Secure;->getUriFor(Ljava/lang/String;)Landroid/net/Uri;
-
-    move-result-object v1
-
-    sget-object v2, Lcom/google/oslo/OsloExperiments;->observer:Landroid/database/ContentObserver;
-
-    .line 72
-    invoke-virtual {p0, v1, v0, v2}, Landroid/content/ContentResolver;->registerContentObserver(Landroid/net/Uri;ZLandroid/database/ContentObserver;)V
-
-    .line 74
     const-string p0, "aware_allowed"
 
     const-string v1, "airplane_mode_on"
@@ -558,67 +459,67 @@
 
     move v1, v0
 
-    :goto_78
+    :goto_67
     const/4 v2, 0x3
 
-    if-ge v1, v2, :cond_8f
+    if-ge v1, v2, :cond_7e
 
     aget-object v2, p0, v1
 
-    .line 75
+    .line 73
     sget-object v3, Lcom/google/oslo/OsloExperiments;->context:Landroid/content/Context;
 
     invoke-virtual {v3}, Landroid/content/Context;->getContentResolver()Landroid/content/ContentResolver;
 
     move-result-object v3
 
-    .line 76
+    .line 74
     invoke-static {v2}, Landroid/provider/Settings$Global;->getUriFor(Ljava/lang/String;)Landroid/net/Uri;
 
     move-result-object v2
 
     sget-object v4, Lcom/google/oslo/OsloExperiments;->observer:Landroid/database/ContentObserver;
 
-    .line 75
+    .line 73
     invoke-virtual {v3, v2, v0, v4}, Landroid/content/ContentResolver;->registerContentObserver(Landroid/net/Uri;ZLandroid/database/ContentObserver;)V
 
-    .line 74
+    .line 72
     add-int/lit8 v1, v1, 0x1
 
-    goto :goto_78
+    goto :goto_67
 
-    .line 78
-    :cond_8f
+    .line 76
+    :cond_7e
     invoke-static {}, Lcom/google/oslo/OsloExperiments;->readSettings()V
-    :try_end_92
-    .catch Ljava/lang/RuntimeException; {:try_start_b .. :try_end_92} :catch_93
-
-    .line 82
-    goto :goto_9e
-
-    .line 79
-    :catch_93
-    move-exception p0
+    :try_end_81
+    .catch Ljava/lang/RuntimeException; {:try_start_b .. :try_end_81} :catch_82
 
     .line 80
+    goto :goto_8d
+
+    .line 77
+    :catch_82
+    move-exception p0
+
+    .line 78
     const-string v0, "Oslo.Experiments"
 
     const-string v1, "Experiment bridge unavailable"
 
     invoke-static {v0, v1, p0}, Landroid/util/Log;->w(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)I
 
-    .line 81
+    .line 79
     invoke-static {}, Lcom/google/oslo/OsloExperiments;->close()V
 
-    .line 83
-    :goto_9e
+    .line 81
+    :goto_8d
     return-void
 .end method
 
 .method public static isLabActive()Z
     .registers 3
 
-    .line 150
+    .line 132
     sget-object v0, Lcom/google/oslo/OsloExperiments;->POLICY:Lcom/google/oslo/ExperimentPolicy;
 
     invoke-static {}, Landroid/os/SystemClock;->elapsedRealtime()J
@@ -635,10 +536,10 @@
 .method static synthetic lambda$attach$3(Landroid/content/Context;Landroid/opengl/GLSurfaceView;)V
     .registers 3
 
-    .line 113
+    .line 109
     invoke-static {p0}, Lcom/google/oslo/OsloExperiments;->initializeMain(Landroid/content/Context;)V
 
-    .line 114
+    .line 110
     sget-object p0, Lcom/google/oslo/OsloExperiments;->VIEWS:Ljava/util/ArrayList;
 
     invoke-virtual {p0}, Ljava/util/ArrayList;->iterator()Ljava/util/Iterator;
@@ -666,7 +567,7 @@
 
     return-void
 
-    .line 115
+    .line 111
     :cond_1c
     sget-object p0, Lcom/google/oslo/OsloExperiments;->VIEWS:Ljava/util/ArrayList;
 
@@ -676,20 +577,17 @@
 
     invoke-virtual {p0, v0}, Ljava/util/ArrayList;->add(Ljava/lang/Object;)Z
 
-    .line 116
-    invoke-static {}, Lcom/google/oslo/OsloExperiments;->updateAlbumMonitor()V
-
-    .line 117
+    .line 112
     invoke-static {}, Lcom/google/oslo/OsloExperiments;->startFrames()V
 
-    .line 118
+    .line 113
     return-void
 .end method
 
 .method static synthetic lambda$detach$4(Landroid/opengl/GLSurfaceView;Ljava/lang/ref/WeakReference;)Z
     .registers 3
 
-    .line 122
+    .line 117
     invoke-virtual {p1}, Ljava/lang/ref/WeakReference;->get()Ljava/lang/Object;
 
     move-result-object v0
@@ -720,7 +618,7 @@
 .method static synthetic lambda$detach$5(Landroid/opengl/GLSurfaceView;)V
     .registers 3
 
-    .line 122
+    .line 117
     sget-object v0, Lcom/google/oslo/OsloExperiments;->VIEWS:Ljava/util/ArrayList;
 
     new-instance v1, Lcom/google/oslo/OsloExperiments$$ExternalSyntheticLambda3;
@@ -729,13 +627,10 @@
 
     invoke-virtual {v0, v1}, Ljava/util/ArrayList;->removeIf(Ljava/util/function/Predicate;)Z
 
-    .line 123
-    invoke-static {}, Lcom/google/oslo/OsloExperiments;->updateAlbumMonitor()V
-
-    .line 124
+    .line 118
     sget-boolean p0, Lcom/google/oslo/OsloExperiments;->service:Z
 
-    if-nez p0, :cond_1c
+    if-nez p0, :cond_19
 
     sget-object p0, Lcom/google/oslo/OsloExperiments;->VIEWS:Ljava/util/ArrayList;
 
@@ -743,12 +638,12 @@
 
     move-result p0
 
-    if-eqz p0, :cond_1c
+    if-eqz p0, :cond_19
 
     invoke-static {}, Lcom/google/oslo/OsloExperiments;->close()V
 
-    .line 125
-    :cond_1c
+    .line 119
+    :cond_19
     return-void
 .end method
 
@@ -764,7 +659,7 @@
 .method static synthetic lambda$serviceStarted$1(Landroid/content/Context;)V
     .registers 2
 
-    .line 106
+    .line 102
     const/4 v0, 0x1
 
     sput-boolean v0, Lcom/google/oslo/OsloExperiments;->service:Z
@@ -777,7 +672,7 @@
 .method static synthetic lambda$serviceStopped$2()V
     .registers 1
 
-    .line 109
+    .line 105
     const/4 v0, 0x0
 
     sput-boolean v0, Lcom/google/oslo/OsloExperiments;->service:Z
@@ -799,7 +694,7 @@
 .method private static readSettings()V
     .registers 5
 
-    .line 89
+    .line 87
     const/4 v0, 0x0
 
     :try_start_1
@@ -815,7 +710,7 @@
 
     sput v1, Lcom/google/oslo/OsloExperiments;->savedStyle:I
 
-    .line 90
+    .line 88
     const-string v1, "aware_glow_speed"
 
     const/16 v2, 0x64
@@ -830,7 +725,7 @@
 
     sput v1, Lcom/google/oslo/OsloExperiments;->savedSpeed:I
 
-    .line 91
+    .line 89
     const-string v1, "aware_gesture_trails"
 
     invoke-static {v1, v0}, Lcom/google/oslo/OsloExperiments;->setting(Ljava/lang/String;I)I
@@ -851,7 +746,7 @@
     :goto_27
     sput-boolean v1, Lcom/google/oslo/OsloExperiments;->trails:Z
 
-    .line 92
+    .line 90
     const-string v1, "aware_enabled"
 
     invoke-static {v1, v0}, Lcom/google/oslo/OsloExperiments;->setting(Ljava/lang/String;I)I
@@ -862,7 +757,7 @@
 
     sget-object v1, Lcom/google/oslo/OsloExperiments;->context:Landroid/content/Context;
 
-    .line 93
+    .line 91
     invoke-virtual {v1}, Landroid/content/Context;->getContentResolver()Landroid/content/ContentResolver;
 
     move-result-object v1
@@ -877,7 +772,7 @@
 
     sget-object v1, Lcom/google/oslo/OsloExperiments;->context:Landroid/content/Context;
 
-    .line 94
+    .line 92
     invoke-virtual {v1}, Landroid/content/Context;->getContentResolver()Landroid/content/ContentResolver;
 
     move-result-object v1
@@ -892,7 +787,7 @@
 
     sget-object v1, Lcom/google/oslo/OsloExperiments;->context:Landroid/content/Context;
 
-    .line 95
+    .line 93
     invoke-virtual {v1}, Landroid/content/Context;->getContentResolver()Landroid/content/ContentResolver;
 
     move-result-object v1
@@ -915,7 +810,7 @@
     :goto_5e
     sput-boolean v1, Lcom/google/oslo/OsloExperiments;->enabled:Z
 
-    .line 96
+    .line 94
     const-string v1, "aware_glow_show"
 
     invoke-static {v1, v3}, Lcom/google/oslo/OsloExperiments;->setting(Ljava/lang/String;I)I
@@ -934,7 +829,7 @@
     :goto_6b
     sput-boolean v1, Lcom/google/oslo/OsloExperiments;->shown:Z
 
-    .line 97
+    .line 95
     const-string v1, "aware_glow_brightness"
 
     invoke-static {v1, v2}, Lcom/google/oslo/OsloExperiments;->setting(Ljava/lang/String;I)I
@@ -953,26 +848,24 @@
 
     sput v1, Lcom/google/oslo/OsloExperiments;->brightness:I
 
-    .line 98
+    .line 96
     const-string v1, "aware_air_dj"
 
     invoke-static {v1, v0}, Lcom/google/oslo/OsloExperiments;->setting(Ljava/lang/String;I)I
 
     move-result v1
 
-    if-ne v1, v3, :cond_89
+    if-ne v1, v3, :cond_88
 
-    move v1, v3
+    goto :goto_89
 
-    goto :goto_8a
+    :cond_88
+    move v3, v0
 
-    :cond_89
-    move v1, v0
+    :goto_89
+    sput-boolean v3, Lcom/google/oslo/OsloExperiments;->airDj:Z
 
-    :goto_8a
-    sput-boolean v1, Lcom/google/oslo/OsloExperiments;->airDj:Z
-
-    .line 99
+    .line 97
     const-string v1, "aware_air_dj_mode"
 
     invoke-static {v1, v0}, Lcom/google/oslo/OsloExperiments;->setting(Ljava/lang/String;I)I
@@ -984,65 +877,45 @@
     move-result v1
 
     sput v1, Lcom/google/oslo/OsloExperiments;->airMode:I
+    :try_end_97
+    .catch Ljava/lang/RuntimeException; {:try_start_1 .. :try_end_97} :catch_98
 
-    .line 100
-    const-string v1, "aware_album_art_glow"
+    .line 98
+    goto :goto_9b
 
-    invoke-static {v1, v0}, Lcom/google/oslo/OsloExperiments;->setting(Ljava/lang/String;I)I
-
-    move-result v1
-
-    if-ne v1, v3, :cond_a1
-
-    goto :goto_a2
-
-    :cond_a1
-    move v3, v0
-
-    :goto_a2
-    sput-boolean v3, Lcom/google/oslo/OsloExperiments;->albumGlow:Z
-    :try_end_a4
-    .catch Ljava/lang/RuntimeException; {:try_start_1 .. :try_end_a4} :catch_a5
-
-    .line 101
-    goto :goto_a8
-
-    :catch_a5
+    :catch_98
     move-exception v1
 
     sput-boolean v0, Lcom/google/oslo/OsloExperiments;->enabled:Z
 
-    .line 102
-    :goto_a8
-    invoke-static {}, Lcom/google/oslo/OsloExperiments;->updateAlbumMonitor()V
-
-    .line 103
+    .line 99
+    :goto_9b
     invoke-static {}, Lcom/google/oslo/OsloExperiments;->startFrames()V
 
-    .line 104
+    .line 100
     return-void
 .end method
 
 .method public static serviceStarted(Landroid/content/Context;)V
     .registers 3
 
-    .line 106
+    .line 102
     sget-object v0, Lcom/google/oslo/OsloExperiments;->MAIN:Landroid/os/Handler;
 
-    new-instance v1, Lcom/google/oslo/OsloExperiments$$ExternalSyntheticLambda6;
+    new-instance v1, Lcom/google/oslo/OsloExperiments$$ExternalSyntheticLambda5;
 
-    invoke-direct {v1, p0}, Lcom/google/oslo/OsloExperiments$$ExternalSyntheticLambda6;-><init>(Landroid/content/Context;)V
+    invoke-direct {v1, p0}, Lcom/google/oslo/OsloExperiments$$ExternalSyntheticLambda5;-><init>(Landroid/content/Context;)V
 
     invoke-virtual {v0, v1}, Landroid/os/Handler;->post(Ljava/lang/Runnable;)Z
 
-    .line 107
+    .line 103
     return-void
 .end method
 
 .method public static serviceStopped()V
     .registers 2
 
-    .line 109
+    .line 105
     sget-object v0, Lcom/google/oslo/OsloExperiments;->MAIN:Landroid/os/Handler;
 
     new-instance v1, Lcom/google/oslo/OsloExperiments$$ExternalSyntheticLambda2;
@@ -1051,14 +924,14 @@
 
     invoke-virtual {v0, v1}, Landroid/os/Handler;->post(Ljava/lang/Runnable;)Z
 
-    .line 110
+    .line 106
     return-void
 .end method
 
 .method private static setting(Ljava/lang/String;I)I
     .registers 3
 
-    .line 85
+    .line 83
     sget-object v0, Lcom/google/oslo/OsloExperiments;->context:Landroid/content/Context;
 
     invoke-virtual {v0}, Landroid/content/Context;->getContentResolver()Landroid/content/ContentResolver;
@@ -1075,95 +948,44 @@
 .method private static startFrames()V
     .registers 2
 
-    .line 167
+    .line 149
     sget-boolean v0, Lcom/google/oslo/OsloExperiments;->pumping:Z
 
     if-eqz v0, :cond_5
 
     return-void
 
-    .line 168
+    .line 150
     :cond_5
     const/4 v0, 0x1
 
     sput-boolean v0, Lcom/google/oslo/OsloExperiments;->pumping:Z
 
-    .line 169
+    .line 151
     sget-object v0, Lcom/google/oslo/OsloExperiments;->MAIN:Landroid/os/Handler;
 
     sget-object v1, Lcom/google/oslo/OsloExperiments;->FRAME:Ljava/lang/Runnable;
 
     invoke-virtual {v0, v1}, Landroid/os/Handler;->post(Ljava/lang/Runnable;)Z
 
-    .line 170
-    return-void
-.end method
-
-.method private static updateAlbumMonitor()V
-    .registers 3
-
-    .line 138
-    sget-object v0, Lcom/google/oslo/OsloExperiments;->context:Landroid/content/Context;
-
-    if-eqz v0, :cond_25
-
-    sget-object v0, Lcom/google/oslo/OsloExperiments;->context:Landroid/content/Context;
-
-    sget-boolean v1, Lcom/google/oslo/OsloExperiments;->enabled:Z
-
-    if-eqz v1, :cond_1c
-
-    sget-boolean v1, Lcom/google/oslo/OsloExperiments;->shown:Z
-
-    if-eqz v1, :cond_1c
-
-    sget-boolean v1, Lcom/google/oslo/OsloExperiments;->albumGlow:Z
-
-    if-eqz v1, :cond_1c
-
-    sget-object v1, Lcom/google/oslo/OsloExperiments;->VIEWS:Ljava/util/ArrayList;
-
-    .line 139
-    invoke-virtual {v1}, Ljava/util/ArrayList;->isEmpty()Z
-
-    move-result v1
-
-    if-nez v1, :cond_1c
-
-    const/4 v1, 0x1
-
-    goto :goto_1d
-
-    :cond_1c
-    const/4 v1, 0x0
-
-    :goto_1d
-    new-instance v2, Lcom/google/oslo/OsloExperiments$$ExternalSyntheticLambda5;
-
-    invoke-direct {v2}, Lcom/google/oslo/OsloExperiments$$ExternalSyntheticLambda5;-><init>()V
-
-    .line 138
-    invoke-static {v0, v1, v2}, Lcom/google/oslo/AlbumArtController;->configure(Landroid/content/Context;ZLjava/lang/Runnable;)V
-
-    .line 140
-    :cond_25
+    .line 152
     return-void
 .end method
 
 .method public static visibility(I)I
     .registers 7
 
-    .line 154
+    .line 136
     invoke-static {}, Landroid/os/SystemClock;->elapsedRealtime()J
 
     move-result-wide v0
 
-    .line 155
+    .line 137
     sget-wide v2, Lcom/google/oslo/OsloExperiments;->gestureAt:J
 
     sub-long v2, v0, v2
 
-    .line 156
+    .line 138
     sget-object v4, Lcom/google/oslo/OsloExperiments;->POLICY:Lcom/google/oslo/ExperimentPolicy;
 
     invoke-virtual {v4, v0, v1}, Lcom/google/oslo/ExperimentPolicy;->previewing(J)Z
@@ -1209,7 +1031,7 @@
     :goto_2c
     const/4 v0, 0x1
 
-    .line 158
+    .line 140
     :goto_2d
     sget-boolean v2, Lcom/google/oslo/OsloExperiments;->enabled:Z
 

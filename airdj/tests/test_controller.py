@@ -15,6 +15,22 @@ STUBS = {
     'content/Context': '''public class Context {
         private final ContentResolver resolver = new ContentResolver();
         public ContentResolver getContentResolver() { return resolver; }
+        public final java.util.List<Intent> events = new java.util.ArrayList<>();
+        public String permission; public boolean failFeedback;
+        public void sendBroadcast(Intent event, String permission) {
+            if(failFeedback) throw new IllegalStateException("feedback receiver unavailable");
+            this.permission=permission;events.add(event);
+        }
+    }''',
+    'content/Intent': '''public class Intent {
+        public final String action;public String target;
+        public final java.util.Map<String,Object> extras=new java.util.HashMap<>();
+        public Intent(String action){this.action=action;}
+        public Intent setPackage(String target){this.target=target;return this;}
+        public Intent putExtra(String key,Object value){extras.put(key,value);return this;}
+    }''',
+    'app/ActivityManager': '''public class ActivityManager {
+        public static int user;public static int getCurrentUser(){return user;}
     }''',
     'provider/Settings': '''public class Settings {
         public static class Secure {
@@ -37,8 +53,10 @@ STUBS = {
     }''',
     'media/MediaMetadata': '''public class MediaMetadata {
         public static final String METADATA_KEY_DURATION = "duration";
+        public static final String METADATA_KEY_MEDIA_ID="id",METADATA_KEY_TITLE="title";
         public long duration;
         public long getLong(String key) { return duration; }
+        public String getString(String key){return null;}
     }''',
     'media/session/PlaybackState': '''public class PlaybackState {
         public static final int STATE_PLAYING = 3;
@@ -51,6 +69,7 @@ STUBS = {
         public long getPosition() { return position; }
         public long getLastPositionUpdateTime() { return updated; }
         public float getPlaybackSpeed() { return speed; }
+        public long getActiveQueueItemId(){return -1;}
     }''',
     'media/session/MediaController': '''public class MediaController {
         public final String name;
@@ -61,6 +80,7 @@ STUBS = {
         public int volumeCalls, direction; public boolean dead;
         public MediaController(String name) { this.name = name; }
         public String getPackageName() { return name; }
+        public String getSessionToken(){return name;}
         public PlaybackState getPlaybackState() { return state; }
         public PlaybackInfo getPlaybackInfo() { return info; }
         public android.media.MediaMetadata getMetadata() { return metadata; }
@@ -72,9 +92,11 @@ STUBS = {
         public static class PlaybackInfo {
             public int control = 1;
             public int getVolumeControl() { return control; }
+            public int getCurrentVolume(){return 5;}
         }
         public static class TransportControls {
-            public int next, previous, seeks; public long target;
+            public int next, previous, seeks,plays,pauses; public long target;
+            public void play(){plays++;}public void pause(){pauses++;}
             public void skipToNext() { next++; }
             public void skipToPrevious() { previous++; }
             public void seekTo(long target) { seeks++; this.target = target; }
@@ -166,6 +188,48 @@ public class AirDjControllerTest {
         c = enabled(0); c.getContentResolver().writable = false;
         AirDjController.handleTap(c, Arrays.asList(b), true);
         check(AirDjController.getLastActionPackage() == null, "failed setting write no success");
+        check(c.events.isEmpty(), "failed mode write produces no feedback");
+        c=enabled(0); a.dead=false;a.state.state=3;a.state.actions=304;
+        android.app.ActivityManager.user=10;
+        AirDjController.handleFlick(c,Arrays.asList(a),true);
+        check(c.events.size()==1,"successful Air DJ dispatch emits one event");
+        var event=c.events.get(0);
+        check(event.action.equals(MotionFeedback.ACTION)&&event.target.equals("com.android.systemui")
+                &&c.permission.equals("android.permission.STATUS_BAR_SERVICE"),"package/permission-scoped event");
+        check(event.extras.get("action").equals(MotionFeedback.NEXT)
+                &&event.extras.get("user").equals(10)&&event.extras.get("session").equals("a"),"real action/session/current user");
+        int count=c.events.size();
+        AirDjController.handleFlick(c,Arrays.asList(a),true);
+        check(c.events.size()==count,"cooldown rejection emits nothing");
+        MotionFeedback.play(c,a);MotionFeedback.pause(c,a);MotionFeedback.previous(c,a);
+        check(a.controls.plays==1&&a.controls.pauses==1&&c.events.size()==count+3,"stock wrappers dispatch once then report");
+        count=c.events.size();b.dead=true;
+        try {MotionFeedback.next(c,b);throw new AssertionError("dead command accepted");}
+        catch(IllegalStateException expected){}
+        check(c.events.size()==count,"failed transport emits nothing");
+        c.failFeedback=true;int sent=a.controls.next;MotionFeedback.next(c,a);
+        check(a.controls.next==sent+1&&c.events.size()==count,"feedback failure preserves actual media action");
+        c.failFeedback=false;var snapshot=MotionFeedback.before(a);android.app.ActivityManager.user=11;
+        MotionFeedback.sent(c,a,MotionFeedback.NEXT,snapshot);
+        check(c.events.size()==count,"user switch during dispatch cannot relabel old session as the new user");
+        android.app.ActivityManager.user=10;
+        MotionFeedback.next(c,a,4);
+        check(c.events.get(c.events.size()-1).extras.get("direction").equals(-1),
+                "next uses physical left even when skip mapping reversed");
+        MotionFeedback.previous(c,a,2);
+        check(c.events.get(c.events.size()-1).extras.get("direction").equals(1),
+                "previous uses physical right rather than semantic action");
+        MotionFeedback.pause(c,a);
+        check(c.events.get(c.events.size()-1).extras.get("direction").equals(0),
+                "tap never inherits prior flick direction");
+        check(MotionFeedback.physicalDirection(1)==1&&MotionFeedback.physicalDirection(8)==1
+                &&MotionFeedback.physicalDirection(5)==-1&&MotionFeedback.physicalDirection(6)==-1
+                &&MotionFeedback.physicalDirection(0)==0&&MotionFeedback.physicalDirection(3)==0,
+                "raw direction matches native OsloOverlay switch including diagonals");
+        c=enabled(0);a.dead=false;a.state.state=3;a.state.actions=304;
+        AirDjController.handleFlick(c,Arrays.asList(a),true,5);
+        check(c.events.size()==1&&c.events.get(0).extras.get("direction").equals(-1),
+                "Air DJ preserves raw side independently of forward flag");
         System.out.println("Air DJ controller: " + checks + " checks passed");
     }
 }
@@ -182,6 +246,7 @@ with tempfile.TemporaryDirectory(prefix='airdj-tests-') as temp:
     test.write_text(TEST)
     classes = temp / 'classes'
     sources = list(temp.rglob('*.java')) + [ROOT / 'airdj/src/com/google/oslo/AirDjPolicy.java',
+            ROOT / 'airdj/src/com/google/oslo/MotionFeedback.java',
             ROOT / 'airdj/src/com/google/oslo/AirDjController.java']
     subprocess.run(['java', 'com.sun.tools.javac.Main', '-d', str(classes)]
                    + [str(p) for p in sources], check=True)

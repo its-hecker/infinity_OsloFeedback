@@ -50,7 +50,9 @@
     move-result-object v0
     invoke-virtual {p0}, Lcom/google/oslo/service/actions/SkipMediaTrack;->getAirDjSessions()Ljava/util/List;
     move-result-object v1
-    invoke-static {v0, v1, p1}, Lcom/google/oslo/AirDjController;->handleFlick(Landroid/content/Context;Ljava/util/List;Z)Z
+    invoke-virtual {p2}, Lcom/google/oslo/service/serviceinterface/output/OsloFlickOutput;->getDirection()I
+    move-result v7
+    invoke-static {v0, v1, p1, v7}, Lcom/google/oslo/AirDjController;->handleFlick(Landroid/content/Context;Ljava/util/List;ZI)Z
     move-result v0
     if-eqz v0, :stock_advance
     invoke-static {}, Lcom/google/oslo/AirDjController;->getLastActionPackage()Ljava/lang/String;
@@ -180,7 +182,12 @@
     if-eqz p1, :cond_2
 
     .line 128
-    invoke-virtual {v4}, Landroid/media/session/MediaController$TransportControls;->skipToNext()V
+    invoke-virtual {p0}, Lcom/google/oslo/service/actions/SkipMediaTrack;->getContext()Landroid/content/Context;
+    move-result-object v5
+    iget-object v6, v1, Lcom/google/oslo/service/actions/MediaPlayerAction$OsloMediaController;->mMediaController:Landroid/media/session/MediaController;
+    invoke-virtual {p2}, Lcom/google/oslo/service/serviceinterface/output/OsloFlickOutput;->getDirection()I
+    move-result v7
+    invoke-static {v5, v6, v7}, Lcom/google/oslo/MotionFeedback;->next(Landroid/content/Context;Landroid/media/session/MediaController;I)V
 
     .line 130
     invoke-virtual {p0}, Lcom/google/oslo/service/actions/SkipMediaTrack;->getTag()Ljava/lang/String;
@@ -211,7 +218,12 @@
 
     .line 133
     :cond_2
-    invoke-virtual {v4}, Landroid/media/session/MediaController$TransportControls;->skipToPrevious()V
+    invoke-virtual {p0}, Lcom/google/oslo/service/actions/SkipMediaTrack;->getContext()Landroid/content/Context;
+    move-result-object v5
+    iget-object v6, v1, Lcom/google/oslo/service/actions/MediaPlayerAction$OsloMediaController;->mMediaController:Landroid/media/session/MediaController;
+    invoke-virtual {p2}, Lcom/google/oslo/service/serviceinterface/output/OsloFlickOutput;->getDirection()I
+    move-result v7
+    invoke-static {v5, v6, v7}, Lcom/google/oslo/MotionFeedback;->previous(Landroid/content/Context;Landroid/media/session/MediaController;I)V
 
     .line 135
     invoke-virtual {p0}, Lcom/google/oslo/service/actions/SkipMediaTrack;->getTag()Ljava/lang/String;

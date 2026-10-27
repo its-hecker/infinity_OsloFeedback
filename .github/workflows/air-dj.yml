@@ -1,7 +1,7 @@
 name: Build Motion Lab
 on:
   push:
-    branches: [cnb-Latest-stable]
+    branches: [cnb-Latest-stable, test/coral-root-privacy-20261027]
     paths: ['airdj/**', 'smali/**', '.github/workflows/air-dj.yml']
   workflow_dispatch:
 permissions:

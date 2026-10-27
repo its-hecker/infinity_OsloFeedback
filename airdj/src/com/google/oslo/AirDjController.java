@@ -58,8 +58,11 @@ public final class AirDjController {
             if (!detected || controller == null
                     || !POLICY.acceptGesture(SystemClock.elapsedRealtime(), 750)) return true;
             int next = AirDjPolicy.nextMode(getMode(context));
+            MotionFeedback.Snapshot before = MotionFeedback.before(controller);
             if (Settings.Secure.putInt(context.getContentResolver(), MODE, next)) {
                 lastActionPackage = controller.getPackageName();
+                MotionFeedback.sent(context, controller, MotionFeedback.MODE_TRACK + next,
+                        before);
                 Log.i(TAG, "Mode: " + next);
             }
         } catch (RuntimeException e) {
@@ -71,6 +74,11 @@ public final class AirDjController {
 
     public static boolean handleFlick(Context context, List<MediaController> sessions,
             boolean forward) {
+        return handleFlick(context, sessions, forward, 0);
+    }
+
+    public static boolean handleFlick(Context context, List<MediaController> sessions,
+            boolean forward, int rawDirection) {
         lastActionPackage = null;
         if (!isEnabled(context)) return false;
         try {
@@ -80,6 +88,8 @@ public final class AirDjController {
             PlaybackState state = controller.getPlaybackState();
             if (state == null || state.getState() != PlaybackState.STATE_PLAYING) return true;
             long actions = state.getActions();
+            MotionFeedback.Snapshot before = MotionFeedback.before(controller, rawDirection);
+            int feedback;
             switch (getMode(context)) {
                 case AirDjPolicy.TRACK:
                     long required = forward ? PlaybackState.ACTION_SKIP_TO_NEXT
@@ -87,12 +97,14 @@ public final class AirDjController {
                     if ((actions & required) == 0) return true;
                     if (forward) controller.getTransportControls().skipToNext();
                     else controller.getTransportControls().skipToPrevious();
+                    feedback = forward ? MotionFeedback.NEXT : MotionFeedback.PREVIOUS;
                     break;
                 case AirDjPolicy.VOLUME:
                     MediaController.PlaybackInfo info = controller.getPlaybackInfo();
                     if (info == null || info.getVolumeControl() == 0) return true;
                     // Route through the media session, including remote playback devices.
                     controller.adjustVolume(forward ? 1 : -1, 1);
+                    feedback = forward ? MotionFeedback.VOLUME_UP : MotionFeedback.VOLUME_DOWN;
                     break;
                 case AirDjPolicy.SEEK:
                     if ((actions & PlaybackState.ACTION_SEEK_TO) == 0) return true;
@@ -104,8 +116,11 @@ public final class AirDjController {
                             state.getPlaybackSpeed(), duration, forward);
                     if (target < 0) return true;
                     controller.getTransportControls().seekTo(target);
+                    feedback = forward ? MotionFeedback.SEEK_FORWARD : MotionFeedback.SEEK_BACK;
                     break;
+                default: return true;
             }
+            MotionFeedback.sent(context, controller, feedback, before);
             lastActionPackage = controller.getPackageName();
             Log.i(TAG, "Action sent to " + lastActionPackage);
         } catch (RuntimeException e) {

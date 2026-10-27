@@ -4,7 +4,7 @@
 
 
 # static fields
-.field private static final FRAGMENT:Ljava/lang/String; = "precision mediump float;varying vec2 uv;uniform float age,style,tempo,alpha,trail,side,strip,aspect,album;uniform vec3 color;void main(){float y=(1.0-uv.y)*aspect;float line=exp(-pow((y-0.015)/0.009,2.0));float edge=smoothstep(0.05,0.2,uv.x)*(1.0-smoothstep(0.8,0.95,uv.x));vec3 c=color;float a=line*edge*strip;if(style>0.5&&style<1.5){a*=1.0+0.25*sin(age*8.0*tempo);if(album<0.5)c=mix(c,vec3(1.0,0.1,0.7),0.35);}if(style>1.5&&style<2.5){if(album>0.5)c=mix(color,mix(color,vec3(1.0),0.35),0.5+0.5*sin(uv.x*7.0+age*tempo*3.0));else c=mix(vec3(0.1,0.9,0.6),vec3(0.65,0.2,1.0),0.5+0.5*sin(uv.x*7.0+age*tempo*3.0));}if(style>2.5&&style<3.5){a*=step(0.35,fract(uv.x*22.0-age*tempo));}if(style>3.5){a*=0.45;}float t=clamp(age*tempo,0.0,1.0);float head=mix(0.15,0.85,t);if(side<0.0)head=1.0-head;float tail=exp(-pow((uv.x-head)/0.13,2.0))*line;a=max(a,tail*trail*(1.0-t));gl_FragColor=vec4(c,clamp(a*alpha,0.0,1.0));}"
+.field private static final FRAGMENT:Ljava/lang/String; = "precision mediump float;varying vec2 uv;uniform float age,style,tempo,alpha,trail,side,strip,aspect,modeTint;uniform vec3 color;void main(){float y=(1.0-uv.y)*aspect;float line=exp(-pow((y-0.015)/0.009,2.0));float edge=smoothstep(0.05,0.2,uv.x)*(1.0-smoothstep(0.8,0.95,uv.x));vec3 c=color;float a=line*edge*strip;if(style>0.5&&style<1.5){a*=1.0+0.25*sin(age*8.0*tempo);if(modeTint<0.5)c=mix(c,vec3(1.0,0.1,0.7),0.35);}if(style>1.5&&style<2.5){if(modeTint>0.5)c=mix(color,mix(color,vec3(1.0),0.35),0.5+0.5*sin(uv.x*7.0+age*tempo*3.0));else c=mix(vec3(0.1,0.9,0.6),vec3(0.65,0.2,1.0),0.5+0.5*sin(uv.x*7.0+age*tempo*3.0));}if(style>2.5&&style<3.5){a*=step(0.35,fract(uv.x*22.0-age*tempo));}if(style>3.5){a*=0.45;}float t=clamp(age*tempo,0.0,1.0);float head=mix(0.15,0.85,t);if(side<0.0)head=1.0-head;float tail=exp(-pow((uv.x-head)/0.13,2.0))*line;a=max(a,tail*trail*(1.0-t));gl_FragColor=vec4(c,clamp(a*alpha,0.0,1.0));}"
 
 .field private static final VERTEX:Ljava/lang/String; = "attribute vec2 p;varying vec2 uv;void main(){uv=(p+1.0)*0.5;gl_Position=vec4(p,0.0,1.0);}"
 
@@ -102,7 +102,7 @@
     .line 46
     const v1, 0x8b30
 
-    const-string v2, "precision mediump float;varying vec2 uv;uniform float age,style,tempo,alpha,trail,side,strip,aspect,album;uniform vec3 color;void main(){float y=(1.0-uv.y)*aspect;float line=exp(-pow((y-0.015)/0.009,2.0));float edge=smoothstep(0.05,0.2,uv.x)*(1.0-smoothstep(0.8,0.95,uv.x));vec3 c=color;float a=line*edge*strip;if(style>0.5&&style<1.5){a*=1.0+0.25*sin(age*8.0*tempo);if(album<0.5)c=mix(c,vec3(1.0,0.1,0.7),0.35);}if(style>1.5&&style<2.5){if(album>0.5)c=mix(color,mix(color,vec3(1.0),0.35),0.5+0.5*sin(uv.x*7.0+age*tempo*3.0));else c=mix(vec3(0.1,0.9,0.6),vec3(0.65,0.2,1.0),0.5+0.5*sin(uv.x*7.0+age*tempo*3.0));}if(style>2.5&&style<3.5){a*=step(0.35,fract(uv.x*22.0-age*tempo));}if(style>3.5){a*=0.45;}float t=clamp(age*tempo,0.0,1.0);float head=mix(0.15,0.85,t);if(side<0.0)head=1.0-head;float tail=exp(-pow((uv.x-head)/0.13,2.0))*line;a=max(a,tail*trail*(1.0-t));gl_FragColor=vec4(c,clamp(a*alpha,0.0,1.0));}"
+    const-string v2, "precision mediump float;varying vec2 uv;uniform float age,style,tempo,alpha,trail,side,strip,aspect,modeTint;uniform vec3 color;void main(){float y=(1.0-uv.y)*aspect;float line=exp(-pow((y-0.015)/0.009,2.0));float edge=smoothstep(0.05,0.2,uv.x)*(1.0-smoothstep(0.8,0.95,uv.x));vec3 c=color;float a=line*edge*strip;if(style>0.5&&style<1.5){a*=1.0+0.25*sin(age*8.0*tempo);if(modeTint<0.5)c=mix(c,vec3(1.0,0.1,0.7),0.35);}if(style>1.5&&style<2.5){if(modeTint>0.5)c=mix(color,mix(color,vec3(1.0),0.35),0.5+0.5*sin(uv.x*7.0+age*tempo*3.0));else c=mix(vec3(0.1,0.9,0.6),vec3(0.65,0.2,1.0),0.5+0.5*sin(uv.x*7.0+age*tempo*3.0));}if(style>2.5&&style<3.5){a*=step(0.35,fract(uv.x*22.0-age*tempo));}if(style>3.5){a*=0.45;}float t=clamp(age*tempo,0.0,1.0);float head=mix(0.15,0.85,t);if(side<0.0)head=1.0-head;float tail=exp(-pow((uv.x-head)/0.13,2.0))*line;a=max(a,tail*trail*(1.0-t));gl_FragColor=vec4(c,clamp(a*alpha,0.0,1.0));}"
 
     invoke-static {v1, v2}, Lcom/google/oslo/LabGlowRenderer;->shader(ILjava/lang/String;)I
 
@@ -281,7 +281,7 @@
     .line 68
     sget-boolean v7, Lcom/google/oslo/OsloExperiments;->enabled:Z
 
-    if-eqz v7, :cond_150
+    if-eqz v7, :cond_13d
 
     const-wide/16 v7, 0x4b0
 
@@ -289,17 +289,17 @@
 
     sget-boolean v9, Lcom/google/oslo/OsloExperiments;->shown:Z
 
-    if-eqz v9, :cond_150
+    if-eqz v9, :cond_13d
 
     cmp-long v9, v5, v7
 
-    if-gez v9, :cond_150
+    if-gez v9, :cond_13d
 
     const-wide/16 v9, 0x0
 
     cmp-long v9, v5, v9
 
-    if-ltz v9, :cond_150
+    if-ltz v9, :cond_13d
 
     if-nez v4, :cond_36
 
@@ -307,7 +307,7 @@
 
     if-nez v9, :cond_36
 
-    goto/16 :goto_150
+    goto/16 :goto_13d
 
     .line 70
     :cond_36
@@ -570,53 +570,24 @@
 
     move-result v1
 
-    .line 87
-    invoke-static {}, Lcom/google/oslo/AlbumArtController;->getColor()I
-
-    move-result v4
-
     .line 88
-    if-nez v3, :cond_110
-
-    sget-boolean v5, Lcom/google/oslo/OsloExperiments;->airDj:Z
-
-    if-nez v5, :cond_110
-
-    if-eqz v4, :cond_110
-
-    goto :goto_111
-
-    :cond_110
-    move v9, v12
-
-    .line 89
-    :goto_111
-    if-eqz v9, :cond_114
-
-    move v1, v4
-
-    .line 91
-    :cond_114
-    if-nez v9, :cond_11e
-
     sget-boolean v4, Lcom/google/oslo/OsloExperiments;->airDj:Z
 
-    if-eqz v4, :cond_11d
+    if-eqz v4, :cond_10a
 
-    if-nez v3, :cond_11d
+    if-nez v3, :cond_10a
 
-    goto :goto_11e
+    goto :goto_10b
 
-    :cond_11d
+    :cond_10a
     move v8, v2
 
-    :cond_11e
-    :goto_11e
-    const-string v2, "album"
+    :goto_10b
+    const-string v2, "modeTint"
 
     invoke-direct {v0, v2, v8}, Lcom/google/oslo/LabGlowRenderer;->uniform(Ljava/lang/String;F)V
 
-    .line 92
+    .line 89
     iget v0, v0, Lcom/google/oslo/LabGlowRenderer;->program:I
 
     const-string v2, "color"
@@ -625,7 +596,7 @@
 
     move-result v0
 
-    .line 93
+    .line 90
     invoke-static {v1}, Landroid/graphics/Color;->red(I)I
 
     move-result v2
@@ -644,7 +615,7 @@
 
     div-float/2addr v4, v3
 
-    .line 94
+    .line 91
     invoke-static {v1}, Landroid/graphics/Color;->blue(I)I
 
     move-result v1
@@ -653,30 +624,30 @@
 
     div-float/2addr v1, v3
 
-    .line 92
+    .line 89
     invoke-static {v0, v2, v4, v1}, Landroid/opengl/GLES20;->glUniform3f(IFFF)V
 
-    .line 95
+    .line 92
     const/4 v0, 0x5
 
     const/4 v1, 0x4
 
     invoke-static {v0, v12, v1}, Landroid/opengl/GLES20;->glDrawArrays(III)V
 
-    .line 96
+    .line 93
     invoke-static {v11}, Landroid/opengl/GLES20;->glDisableVertexAttribArray(I)V
 
-    .line 97
+    .line 94
     aget v0, v10, v12
 
     invoke-static {v0}, Landroid/opengl/GLES20;->glUseProgram(I)V
 
-    .line 98
+    .line 95
     return-void
 
     .line 69
-    :cond_150
-    :goto_150
+    :cond_13d
+    :goto_13d
     return-void
 .end method
 

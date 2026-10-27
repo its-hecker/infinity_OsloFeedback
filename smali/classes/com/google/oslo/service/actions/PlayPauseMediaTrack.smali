@@ -723,7 +723,9 @@
 
     move-result-object v1
 
-    invoke-virtual {v1}, Landroid/media/session/MediaController$TransportControls;->pause()V
+    invoke-virtual {p0}, Lcom/google/oslo/service/actions/PlayPauseMediaTrack;->getContext()Landroid/content/Context;
+    move-result-object v1
+    invoke-static {v1, p1}, Lcom/google/oslo/MotionFeedback;->pause(Landroid/content/Context;Landroid/media/session/MediaController;)V
 
     .line 254
     sget-boolean v1, Lcom/google/oslo/service/actions/PlayPauseMediaTrack;->DEBUG:Z
@@ -803,7 +805,9 @@
 
     move-result-object v1
 
-    invoke-virtual {v1}, Landroid/media/session/MediaController$TransportControls;->play()V
+    invoke-virtual {p0}, Lcom/google/oslo/service/actions/PlayPauseMediaTrack;->getContext()Landroid/content/Context;
+    move-result-object v1
+    invoke-static {v1, p1}, Lcom/google/oslo/MotionFeedback;->play(Landroid/content/Context;Landroid/media/session/MediaController;)V
 
     .line 268
     sget-boolean v1, Lcom/google/oslo/service/actions/PlayPauseMediaTrack;->DEBUG:Z

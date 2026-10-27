@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "purpose": "Coral Motion Island experiment ROM input",
+  "branch": "test/coral-root-privacy-20261027",
+  "source_base": "6dd8d1f3b99d9c2285defc0ddf5970043597504f",
+  "artifact": {
+    "path": "prebuilts/OsloFeedback-MotionIsland.apk",
+    "sha256": "83c339886abcbc5738003756a15cf0a25d13212545acd3dad79ae0a75bd92a09",
+    "size": 7809711
+  },
+  "signing": "Input must be re-signed with the matching ROM platform key; not an adb-install update.",
+  "tools": {
+    "APKEditor.jar": "a9cd40df818845456be6d696de6110c89edf4b0a0580cb83438ed6b25a366e67",
+    "r8.jar": "58366f77067207c39a17d469de7b05701d2877212a9c55201bcb0af43e59e903",
+    "android-35.jar": "ee568219aa3754977207a8fd849fdbf3a299658dd26dd0907d39ca830587f8aa"
+  },
+  "java_sources": {
+    "airdj/src/com/google/oslo/AirDjController.java": "7b67019a35d5959825e0f54194e76039b6bf72c5c481ec24625a2ce8a80bfed8",
+    "airdj/src/com/google/oslo/AirDjPolicy.java": "c9001dd2e19e875a76f4edcd7c65209813aeef6653d2ac6cc0f7493aa627dd70",
+    "airdj/src/com/google/oslo/ExperimentPolicy.java": "b3e644fa622640b1693650fb6ba249aef683bfde562c81132b3461bf5e7c3e69",
+    "airdj/src/com/google/oslo/LabGlowRenderer.java": "e61a634d3b83eb0681e65168150be39d59a30796575b3012004f3d31388dfab0",
+    "airdj/src/com/google/oslo/MotionFeedback.java": "07c7279d97ab2f128104d2755460661c449541b17fbf63d3bfe1c4c97c919f3e",
+    "airdj/src/com/google/oslo/OsloExperiments.java": "ce5446ac8d047aac9c38880eaac78b8c7befac713d886b6ada4fba6a3ea5d060"
+  },
+  "validation": [
+    "Air DJ policy and experiment policy tests",
+    "34 production-controller dispatch and feedback checks",
+    "Android 35 Java and D8 compilation",
+    "APKEditor full DEX/resource rebuild",
+    "2 DEX files; 5994 classes; zero duplicate definitions",
+    "Manifest, components and permissions identical to selected baseline APK",
+    "Actual core-media DEX call sites reference feedback wrappers",
+    "Five glow styles, directional trails and expiry pass EGL/GLES checks",
+    "Sender rejects an Android user switch during media dispatch",
+    "Physical flick direction matches native OsloOverlay, independently of skip mapping; tap direction resets to zero",
+    "DEX-only ZIP compression preserves every manifest/resource/DEX entry payload exactly"
+  ],
+  "packaging": "Only DEX ZIP compression changed after APKEditor; every ZIP entry payload compared byte-for-byte. Soong must align and re-sign with the ROM platform key.",
+  "packaging_script_sha256": "2e2f5d005e3f5cb26d3d73d092d65aff1ea8a97f80b58e92cc02cc7aef3f630f"
+}

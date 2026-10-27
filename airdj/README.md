@@ -1,5 +1,26 @@
 # Air DJ and Motion Lab
 
+## Coral Motion Island experiment
+
+Branch `test/coral-root-privacy-20261027` adds a narrow media-feedback bridge for
+HeckerOS. Stock play/pause/next/previous and successful Air DJ commands emit a
+non-sticky `com.google.oslo.HECKER_MOTION_FEEDBACK` broadcast, explicitly addressed
+to SystemUI. Both sides require the existing `STATUS_BAR_SERVICE` platform
+signature permission. The v1 payload contains a bounded command identifier,
+elapsed timestamp, current Android user, media-session token and pre-command
+state. No sensor, media-control or root API is exported.
+
+Ignored, partial, unsupported and training gestures emit no command events.
+Transport failures retain their existing behavior; failure to publish feedback
+does not change a successfully dispatched media command. A dispatched command is
+not a confirmed player outcome. The native HeckerOS receiver follows actual media
+state and the real glow's visibility before showing feedback.
+
+The rebuilt input APK is at `prebuilts/OsloFeedback-MotionIsland.apk`, with build
+provenance beside it. It must be imported/re-signed by the matching ROM; it is not
+an installable update for another ROM's platform-signed Oslo package. Stable
+branches and the existing root/attestation configuration are independent.
+
 Air DJ is off by default. GoogleParts exposes `aware_air_dj` and the current
 `aware_air_dj_mode` under Settings → System → Motion Sense. Enabling Air DJ turns
 on Skip songs and Pause music because their existing flick and air-tap detectors

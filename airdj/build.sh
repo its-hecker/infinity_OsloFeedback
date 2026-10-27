@@ -35,4 +35,5 @@ PY
 java -cp "$APK_EDITOR_JAR" org.jf.baksmali.Main disassemble \
     "$AIR_DJ_WORK/dex/classes.dex" -o "$AIR_DJ_ROOT/smali/classes2"
 java -jar "$APK_EDITOR_JAR" b -no-cache -i "$AIR_DJ_ROOT" -o "$AIR_DJ_OUTPUT"
+python3 "$AIR_DJ_ROOT/airdj/pack_rom_input.py" "$AIR_DJ_OUTPUT"
 
