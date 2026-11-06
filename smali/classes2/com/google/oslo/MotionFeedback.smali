@@ -41,7 +41,7 @@
 .method private constructor <init>()V
     .registers 1
 
-    .line 114
+    .line 122
     invoke-direct {p0}, Ljava/lang/Object;-><init>()V
 
     return-void
@@ -305,34 +305,23 @@
     .line 99
     const/4 v0, 0x0
 
-    invoke-static {p0, p1, v0}, Lcom/google/oslo/MotionFeedback;->next(Landroid/content/Context;Landroid/media/session/MediaController;I)V
+    invoke-static {p0, p1, v0}, Lcom/google/oslo/MotionFeedback;->next(Landroid/content/Context;Landroid/media/session/MediaController;I)Z
 
     .line 100
     return-void
 .end method
 
-.method public static next(Landroid/content/Context;Landroid/media/session/MediaController;I)V
+.method public static next(Landroid/content/Context;Landroid/media/session/MediaController;I)Z
     .registers 4
 
     .line 102
-    invoke-static {p1, p2}, Lcom/google/oslo/MotionFeedback;->before(Landroid/media/session/MediaController;I)Lcom/google/oslo/MotionFeedback$Snapshot;
+    const/4 v0, 0x1
 
-    move-result-object p2
+    invoke-static {p0, p1, p2, v0}, Lcom/google/oslo/MotionFeedback;->skip(Landroid/content/Context;Landroid/media/session/MediaController;IZ)Z
 
-    .line 103
-    invoke-virtual {p1}, Landroid/media/session/MediaController;->getTransportControls()Landroid/media/session/MediaController$TransportControls;
+    move-result p0
 
-    move-result-object v0
-
-    invoke-virtual {v0}, Landroid/media/session/MediaController$TransportControls;->skipToNext()V
-
-    .line 104
-    const/4 v0, 0x3
-
-    invoke-static {p0, p1, v0, p2}, Lcom/google/oslo/MotionFeedback;->sent(Landroid/content/Context;Landroid/media/session/MediaController;ILcom/google/oslo/MotionFeedback$Snapshot;)V
-
-    .line 105
-    return-void
+    return p0
 .end method
 
 .method public static pause(Landroid/content/Context;Landroid/media/session/MediaController;)V
@@ -439,37 +428,26 @@
 .method public static previous(Landroid/content/Context;Landroid/media/session/MediaController;)V
     .registers 3
 
-    .line 107
+    .line 105
     const/4 v0, 0x0
 
-    invoke-static {p0, p1, v0}, Lcom/google/oslo/MotionFeedback;->previous(Landroid/content/Context;Landroid/media/session/MediaController;I)V
+    invoke-static {p0, p1, v0}, Lcom/google/oslo/MotionFeedback;->previous(Landroid/content/Context;Landroid/media/session/MediaController;I)Z
 
-    .line 108
+    .line 106
     return-void
 .end method
 
-.method public static previous(Landroid/content/Context;Landroid/media/session/MediaController;I)V
+.method public static previous(Landroid/content/Context;Landroid/media/session/MediaController;I)Z
     .registers 4
 
-    .line 110
-    invoke-static {p1, p2}, Lcom/google/oslo/MotionFeedback;->before(Landroid/media/session/MediaController;I)Lcom/google/oslo/MotionFeedback$Snapshot;
+    .line 108
+    const/4 v0, 0x0
 
-    move-result-object p2
+    invoke-static {p0, p1, p2, v0}, Lcom/google/oslo/MotionFeedback;->skip(Landroid/content/Context;Landroid/media/session/MediaController;IZ)Z
 
-    .line 111
-    invoke-virtual {p1}, Landroid/media/session/MediaController;->getTransportControls()Landroid/media/session/MediaController$TransportControls;
+    move-result p0
 
-    move-result-object v0
-
-    invoke-virtual {v0}, Landroid/media/session/MediaController$TransportControls;->skipToPrevious()V
-
-    .line 112
-    const/4 v0, 0x4
-
-    invoke-static {p0, p1, v0, p2}, Lcom/google/oslo/MotionFeedback;->sent(Landroid/content/Context;Landroid/media/session/MediaController;ILcom/google/oslo/MotionFeedback$Snapshot;)V
-
-    .line 113
-    return-void
+    return p0
 .end method
 
 .method public static sent(Landroid/content/Context;Landroid/media/session/MediaController;ILcom/google/oslo/MotionFeedback$Snapshot;)V
@@ -618,4 +596,89 @@
     :cond_6e
     :goto_6e
     return-void
+.end method
+
+.method private static skip(Landroid/content/Context;Landroid/media/session/MediaController;IZ)Z
+    .registers 9
+
+    .line 111
+    invoke-virtual {p1}, Landroid/media/session/MediaController;->getPlaybackState()Landroid/media/session/PlaybackState;
+
+    move-result-object v0
+
+    .line 112
+    if-eqz p3, :cond_9
+
+    const-wide/16 v1, 0x20
+
+    goto :goto_b
+
+    :cond_9
+    const-wide/16 v1, 0x10
+
+    .line 113
+    :goto_b
+    if-eqz v0, :cond_35
+
+    invoke-virtual {v0}, Landroid/media/session/PlaybackState;->getActions()J
+
+    move-result-wide v3
+
+    and-long v0, v3, v1
+
+    const-wide/16 v2, 0x0
+
+    cmp-long v0, v0, v2
+
+    if-nez v0, :cond_1a
+
+    goto :goto_35
+
+    .line 115
+    :cond_1a
+    invoke-static {p1, p2}, Lcom/google/oslo/MotionFeedback;->before(Landroid/media/session/MediaController;I)Lcom/google/oslo/MotionFeedback$Snapshot;
+
+    move-result-object p2
+
+    .line 116
+    invoke-virtual {p1}, Landroid/media/session/MediaController;->getTransportControls()Landroid/media/session/MediaController$TransportControls;
+
+    move-result-object v0
+
+    .line 117
+    if-eqz p3, :cond_28
+
+    invoke-virtual {v0}, Landroid/media/session/MediaController$TransportControls;->skipToNext()V
+
+    goto :goto_2b
+
+    .line 118
+    :cond_28
+    invoke-virtual {v0}, Landroid/media/session/MediaController$TransportControls;->skipToPrevious()V
+
+    .line 119
+    :goto_2b
+    if-eqz p3, :cond_2f
+
+    const/4 p3, 0x3
+
+    goto :goto_30
+
+    :cond_2f
+    const/4 p3, 0x4
+
+    :goto_30
+    invoke-static {p0, p1, p3, p2}, Lcom/google/oslo/MotionFeedback;->sent(Landroid/content/Context;Landroid/media/session/MediaController;ILcom/google/oslo/MotionFeedback$Snapshot;)V
+
+    .line 120
+    const/4 p0, 0x1
+
+    return p0
+
+    .line 113
+    :cond_35
+    :goto_35
+    const/4 p0, 0x0
+
+    return p0
 .end method

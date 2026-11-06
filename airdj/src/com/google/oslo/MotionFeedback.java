@@ -98,18 +98,26 @@ public final class MotionFeedback {
     public static void next(Context context, MediaController controller) {
         next(context, controller, 0);
     }
-    public static void next(Context context, MediaController controller, int rawDirection) {
-        Snapshot before = before(controller, rawDirection);
-        controller.getTransportControls().skipToNext();
-        sent(context, controller, NEXT, before);
+    public static boolean next(Context context, MediaController controller, int rawDirection) {
+        return skip(context, controller, rawDirection, true);
     }
     public static void previous(Context context, MediaController controller) {
         previous(context, controller, 0);
     }
-    public static void previous(Context context, MediaController controller, int rawDirection) {
+    public static boolean previous(Context context, MediaController controller, int rawDirection) {
+        return skip(context, controller, rawDirection, false);
+    }
+    private static boolean skip(Context context, MediaController controller, int rawDirection, boolean forward) {
+        PlaybackState state = controller.getPlaybackState();
+        long required = forward ? PlaybackState.ACTION_SKIP_TO_NEXT : PlaybackState.ACTION_SKIP_TO_PREVIOUS;
+        if (state == null || (state.getActions() & required) == 0) return false;
+
         Snapshot before = before(controller, rawDirection);
-        controller.getTransportControls().skipToPrevious();
-        sent(context, controller, PREVIOUS, before);
+        MediaController.TransportControls controls = controller.getTransportControls();
+        if (forward) controls.skipToNext();
+        else controls.skipToPrevious();
+        sent(context, controller, forward ? NEXT : PREVIOUS, before);
+        return true;
     }
     private MotionFeedback() { }
 }

@@ -107,6 +107,7 @@ STUBS = {
 TEST = '''package com.google.oslo;
 import android.content.Context;
 import android.media.session.MediaController;
+import android.media.session.PlaybackState;
 import android.os.SystemClock;
 import android.provider.Settings;
 import java.util.Arrays;
@@ -219,6 +220,17 @@ public class AirDjControllerTest {
         MotionFeedback.previous(c,a,2);
         check(c.events.get(c.events.size()-1).extras.get("direction").equals(1),
                 "previous uses physical right rather than semantic action");
+        int previous = a.controls.previous;
+        count = c.events.size();
+        a.state.actions = PlaybackState.ACTION_SKIP_TO_NEXT;
+        check(!MotionFeedback.previous(c,a,2) && a.controls.previous==previous && c.events.size()==count,
+                "Next-only session ignores a previous swipe without command feedback");
+        check(MotionFeedback.next(c,a,4) && c.events.size()==count+1,
+                "Next-only session still receives the next swipe");
+        int next = a.controls.next;
+        a.state.actions = PlaybackState.ACTION_SKIP_TO_PREVIOUS;
+        check(!MotionFeedback.next(c,a,4) && a.controls.next==next && c.events.size()==count+1,
+                "Previous-only session ignores a next swipe without command feedback");
         MotionFeedback.pause(c,a);
         check(c.events.get(c.events.size()-1).extras.get("direction").equals(0),
                 "tap never inherits prior flick direction");
